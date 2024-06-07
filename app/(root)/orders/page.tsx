@@ -12,27 +12,23 @@ export default async function Orders() {
   const session = await getServerSession(authOptions);
 
   let orders = [];
-  let locationMetrics = {};
+  let locationMetrics = null;
   let hasBays = false;
   if (!session) {
     return (
-      <div>
+      <div className="flex flex-col items-center justify-center gap-1">
         <h1>Access Denied</h1>
         <p>You must be signed in to view this page.</p>
       </div>
     );
   } else {
-    // let valueLocationId;
-    // valueLocationId = localStorage.getItem("locationId") || "";
     hasBays = session.hasBays;
     locationMetrics = await getLocationMetrics(
       session.id_token,
-      "2024-06-06",
+      "2024-06-07",
       session.locationId
     );
     orders = await getOrders(session.id_token, session.locationId);
-
-    // console.log("this is sessionn,", session);
   }
   return (
     <>

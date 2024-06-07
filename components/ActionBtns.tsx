@@ -4,6 +4,7 @@ import Image from "next/image";
 import { orderChangeState } from "@/lib/actions/order.actions";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import CashoutDialog from "./CashoutDialog";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { updateLocationMetricsChangeState } from "@/lib/actions/location-metrics.action";
 
 interface props {
   state: string;
@@ -21,14 +23,28 @@ interface props {
   shardId: string;
   orderId: string;
   isPaid?: boolean;
+  date: string;
+  estimatedPickUpTime: string;
+  price: number;
 }
 
-const ActionBtns = ({ state, shardId, isPaid, orderId, hasBays }: props) => {
+const ActionBtns = ({
+  state,
+  shardId,
+  isPaid,
+  orderId,
+  hasBays,
+  date,
+  estimatedPickUpTime,
+  price,
+}: props) => {
   const { data: session } = useSession();
   const [actualState, setActualState] = useState(state);
   let accessToken = "";
+  let locationId = "";
   if (session) {
     accessToken = session.id_token;
+    locationId = session.locationId;
   }
 
   //   const handleClickStart = () => {
@@ -40,11 +56,19 @@ const ActionBtns = ({ state, shardId, isPaid, orderId, hasBays }: props) => {
     if (state === "NS") {
       if (hasBays) {
         orderChangeState(accessToken, shardId, orderId, "ST");
+
         setActualState("ST");
       } else {
         orderChangeState(accessToken, shardId, orderId, "S");
         setActualState("S");
       }
+      updateLocationMetricsChangeState(
+        accessToken,
+        "orderStart",
+        date,
+        orderId,
+        locationId
+      );
     } else if (state === "ST") {
       orderChangeState(accessToken, shardId, orderId, "S");
       setActualState("S");
@@ -55,6 +79,14 @@ const ActionBtns = ({ state, shardId, isPaid, orderId, hasBays }: props) => {
         orderChangeState(accessToken, shardId, orderId, "UP");
         setActualState("UP");
       }
+      updateLocationMetricsChangeState(
+        accessToken,
+        "orderFinish",
+        date,
+        orderId,
+        locationId,
+        estimatedPickUpTime
+      );
     }
   };
   return (
@@ -90,11 +122,13 @@ const ActionBtns = ({ state, shardId, isPaid, orderId, hasBays }: props) => {
         </button>
       )}
       {actualState === "UP" && (
-        <button className="flex size-[30px] items-center justify-center rounded-full bg-navy-blue">
-          <p className="mt-2 size-[30px] items-center justify-center text-center">
-            $
-          </p>
-        </button>
+        <CashoutDialog
+          isBefore={false}
+          shardId={shardId}
+          orderId={orderId}
+          price={price}
+          state={actualState}
+        />
       )}
 
       <button className="flex size-[30px] items-center justify-center rounded-full bg-light-blue">

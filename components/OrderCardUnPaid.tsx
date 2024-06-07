@@ -121,7 +121,15 @@ const OrderCardUnPaid = ({ info, hasBays }: props) => {
               ? info.serviceName.split(". ")[1]
               : info.serviceName}
           </p>
-          {!info.paid && <CashoutDialog price={info.price} />}
+          {!info.paid && info.orderState !== "UP" && (
+            <CashoutDialog
+              isBefore={true}
+              price={info.price}
+              shardId={info.shardId}
+              orderId={info.orderId}
+              state={info.orderState}
+            />
+          )}
         </div>
         {info.comment && (
           <p className="text-[10px]  text-dark-blue">{info.comment}</p>
@@ -153,6 +161,9 @@ const OrderCardUnPaid = ({ info, hasBays }: props) => {
         orderId={info.orderId}
         isPaid={info.paid}
         hasBays={hasBays}
+        date={info.date}
+        estimatedPickUpTime={info.estimatedPickUpTime}
+        price={info.price}
       />
     </div>
   );

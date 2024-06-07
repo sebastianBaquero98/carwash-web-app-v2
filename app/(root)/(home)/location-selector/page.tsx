@@ -15,7 +15,11 @@ export default async function Home() {
     );
   } else {
     // console.log("this is this", session.tenantId, session.userName);
-    locations = await getUsersLocations(session.tenantId, session.userName);
+    const tenantId = session?.tenantId;
+    const userName = session?.userName;
+    if (tenantId && userName) {
+      locations = await getUsersLocations(session?.tenantId, session?.userName);
+    }
     // console.log(locations);
   }
   return (

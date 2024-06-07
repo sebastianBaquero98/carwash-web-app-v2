@@ -25,10 +25,14 @@ export const authOptions: any = {
       isNewUser,
       trigger,
     }: any) {
-      if (trigger === "update" && session?.locationId && session?.hasBays) {
-        // console.log("this is session is jwt callback, ", session);
-        token.locationId = session.locationId;
-        token.hasBays = session.hasBays;
+      if (trigger === "update") {
+        const hasBaysKey = "hasBays" in session;
+        if (session?.locationId) {
+          token.locationId = session.locationId;
+        }
+        if (session || hasBaysKey) {
+          token.hasBays = session.hasBays;
+        }
       }
       if (account) {
         token.accessToken = account.access_token;
