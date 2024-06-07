@@ -1,6 +1,7 @@
 import React from "react";
 import "./globals.css";
 import localFont from "next/font/local";
+import Provider from "@/context/Provider";
 
 const myFont = localFont({
   src: [
@@ -27,7 +28,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${myFont.variable} font-sans`}>{children}</body>
+      <Provider>
+        <body className={`${myFont.variable} font-sans`}>{children}</body>
+      </Provider>
     </html>
   );
 }

@@ -2,7 +2,6 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getUsersLocations } from "@/lib/actions/location.action";
 import LocationSelectorList from "@/components/LocationSelectorList";
-// import { getUsersLocations } from "@/lib/actions/location.action";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -15,11 +14,8 @@ export default async function Home() {
       </div>
     );
   } else {
-    locations = await getUsersLocations(
-      session.accessToken,
-      session.tenantId,
-      session.userName
-    );
+    // console.log("this is this", session.tenantId, session.userName);
+    locations = await getUsersLocations(session.tenantId, session.userName);
     // console.log(locations);
   }
   return (

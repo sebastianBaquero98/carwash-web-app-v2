@@ -1,14 +1,19 @@
 "use server";
 
-export async function getUsersLocations(tenantId: string, userName: string) {
+export async function getLocationMetrics(
+  accessToken: string,
+  date: string,
+  locationId: string
+) {
   const myHeaders = new Headers();
+  myHeaders.append("Authorization", "Bearer " + accessToken);
   const raw = JSON.stringify({
-    tenantId,
-    userName,
+    locationId,
+    date,
   });
-  myHeaders.append("Content-Type", "application/json");
+
   const response = await fetch(
-    process.env.NEXT_PUBLIC_ENDPOINTURL_SASS + "users/locations",
+    process.env.NEXT_PUBLIC_ENDPOINTURL + `location-metrics`,
     {
       method: "POST",
       headers: myHeaders,
@@ -17,6 +22,5 @@ export async function getUsersLocations(tenantId: string, userName: string) {
     }
   );
   const result = await response.json();
-  // console.log("result", result);
   return result;
 }

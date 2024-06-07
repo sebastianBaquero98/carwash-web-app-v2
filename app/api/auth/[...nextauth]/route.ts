@@ -16,14 +16,31 @@ export const authOptions: any = {
     maxAge: 30 * 24 * 60 * 60, // Session max age in seconds (30 days)
   },
   callbacks: {
-    async jwt({ token, user, account, profile, isNewUser }: any) {
+    async jwt({
+      token,
+      user,
+      session,
+      account,
+      profile,
+      isNewUser,
+      trigger,
+    }: any) {
+      if (trigger === "update" && session?.locationId && session?.hasBays) {
+        // console.log("this is session is jwt callback, ", session);
+        token.locationId = session.locationId;
+        token.hasBays = session.hasBays;
+      }
       if (account) {
         token.accessToken = account.access_token;
+        token.id_token = account.id_token;
       }
+      // console.log("this is account, ", account);
       return token;
     },
-    async session({ session, token, user }: any) {
+    async session({ session, token, user, trigger }: any) {
       // session.user.id = token.sub;
+      // if (trigger === "update" && session?.locationId) {
+      // }
       const parsedToken = JSON.parse(
         Buffer.from(token.accessToken.split(".")[1], "base64").toString()
       );
@@ -32,6 +49,9 @@ export const authOptions: any = {
       session.accessToken = token.accessToken;
       session.tenantId = parsedToken["cognito:groups"][0];
       session.userName = parsedToken.username;
+      session.locationId = token.locationId;
+      session.hasBays = token.hasBays;
+      session.id_token = token.id_token;
       return session;
     },
   },

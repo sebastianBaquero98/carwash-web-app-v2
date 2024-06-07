@@ -19,7 +19,10 @@ const config: Config = {
       colors: {
         black: "#383840",
         gray: "#F0F0F0",
+        "rolex-green": "#016341",
+        "f1-red": "#ED0100",
         "dark-blue": "#14141C",
+        "navy-blue": "#023047",
         "light-blue": "#219EBC",
         "ferrari-red": "#F70D1A",
         "mclaren-orange": "#FF8000",
