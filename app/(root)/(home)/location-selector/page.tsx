@@ -23,7 +23,7 @@ export default async function Home() {
     // console.log(locations);
   }
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center bg-dark-blue">
       <h1 className="mb-2 mt-5">Select a Location</h1>
       <LocationSelectorList locations={locations} />
     </div>

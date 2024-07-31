@@ -71,7 +71,9 @@ const OrderCardUnPaid = ({ info, hasBays }: props) => {
           />
         )}
 
-        <h3 className="text-[14px] text-dark-blue">{info.carTypeName}</h3>
+        <h3 className={`text-dark-blue`}>
+          {info.carTypeName.split(" ").length > 1 ? "VOT" : info.carTypeName}
+        </h3>
 
         <a
           href={`tel:+19548686754`}
@@ -108,6 +110,14 @@ const OrderCardUnPaid = ({ info, hasBays }: props) => {
               src="/icons/credit-card-2.svg"
               width={20}
               height={10}
+              alt="credit.card-icon"
+            />
+          )}
+          {info.paid && info.paymentType === "" && (
+            <Image
+              src="/icons/cash-credit-icon.svg"
+              width={30}
+              height={20}
               alt="credit.card-icon"
             />
           )}

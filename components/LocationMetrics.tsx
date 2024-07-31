@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import DatePicker from "@/components/DatePicker";
+import Image from "next/image";
 
 interface props {
   info: {
@@ -35,12 +36,74 @@ const LocationMetrics = ({ info }: props) => {
       </div>
       <div className="mt-5 flex w-full items-center justify-center gap-5">
         <DatePicker />
-        <Button className="size-1 rounded-full bg-light-blue">!</Button>
+        <Button className="size-1 rounded-full bg-light-blue">X</Button>
       </div>
 
       {/* <div className="mx-5 flex w-"> */}
       <div className="mt-4 flex w-[340px] justify-evenly rounded-[10px] bg-white py-3">
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col justify-items-center">
+          <div className="flex items-center gap-1">
+            <Image
+              src="/icons/money_red.svg"
+              width={32}
+              height={27}
+              alt="credit-card-icon"
+            />
+            <p className="text-[13px] text-dark-blue ">${info.totalCredit}</p>
+          </div>
+          <div className="flex items-center gap-1">
+            <Image
+              src="/icons/money_green.svg"
+              width={32}
+              height={27}
+              alt="credit-card-icon"
+            />
+            <p className="text-[13px] text-dark-blue">${info.totalCash}</p>
+          </div>
+          <div className="flex items-center gap-1">
+            <Image
+              src="/icons/money_yellow.svg"
+              width={32}
+              height={27}
+              alt="credit-card-icon"
+            />
+            <p className="text-[13px] text-dark-blue">${info.totalTips}</p>
+          </div>
+        </div>
+        <div className="flex items-center">
+          <div className="flex flex-col items-center">
+            <Image
+              src="/icons/car_light_blue.svg"
+              width={52}
+              height={36}
+              alt="credit-card-icon"
+            />
+            <p className="text-[16px] text-dark-blue">{info.totalCars}</p>
+          </div>
+          <div className="flex flex-col items-center">
+            <Image
+              src="/icons/car_green.svg"
+              width={52}
+              height={36}
+              alt="credit-card-icon"
+            />
+            <p className="text-[16px] text-dark-blue">
+              {info.totalCarsInProgress}
+            </p>
+          </div>
+          <div className="flex flex-col items-center">
+            <Image
+              src="/icons/car_white.svg"
+              width={52}
+              height={36}
+              alt="credit-card-icon"
+            />
+            <p className="text-[16px] text-dark-blue">
+              {info.totalPendingCars}
+            </p>
+          </div>
+        </div>
+        {/* <div className="flex flex-col items-center">
           <p className="text-dark-blue">{info.totalCars}</p>
           <p className="text-dark-blue">|</p>
         </div>
@@ -63,7 +126,7 @@ const LocationMetrics = ({ info }: props) => {
         <div className="flex flex-col items-center">
           <p className="text-dark-blue">{info.totalCredit}</p>
           <p className="text-dark-blue">|</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

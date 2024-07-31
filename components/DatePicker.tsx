@@ -12,15 +12,26 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+// interface DateSelectorProps {
+//   onDateSelect: (date: string) => void;
+// }
+
 const DatePicker = () => {
   const [date, setDate] = useState(new Date());
+  // Lo que hare es agregar el parametro a la URL de la fecha seleccionada por el cliente
+  // const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
+  //   const date = event.target.value;
+  //   setDate(date);
+  //   onDateSelect(date);
+  // };
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
           className={cn(
-            "w-[170px] border-2 border-light-blue h-[35px] justify-center items-center rounded-xl bg-white text-dark-blue text-left font-normal text-[12px]",
+            "w-[170px] border-[3px] border-light-blue h-[35px] justify-center items-center rounded-xl bg-white text-dark-blue text-left font-normal text-[12px]",
             !date && "text-muted-foreground"
           )}
         >

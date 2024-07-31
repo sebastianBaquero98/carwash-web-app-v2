@@ -7,6 +7,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { getLocationMetrics } from "@/lib/actions/location-metrics.action";
 import LocationMetrics from "@/components/LocationMetrics";
+import { getFormattedDate } from "@/lib/utils";
 
 export default async function Orders() {
   const session = await getServerSession(authOptions);
@@ -25,7 +26,7 @@ export default async function Orders() {
     hasBays = session.hasBays;
     locationMetrics = await getLocationMetrics(
       session.id_token,
-      "2024-06-07",
+      getFormattedDate(),
       session.locationId
     );
     orders = await getOrders(session.id_token, session.locationId);

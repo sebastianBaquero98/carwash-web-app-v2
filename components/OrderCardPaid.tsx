@@ -59,6 +59,13 @@ const OrderCardPaid = ({ info }: props) => {
             width={30}
             height={30}
           />
+        ) : info.carMake === "Lincoln" ? (
+          <Image
+            alt="brand-icon"
+            src={`https://carwash-car-make-images.s3.amazonaws.com/${info.carMake}.png`}
+            width={10}
+            height={30}
+          />
         ) : (
           <Image
             alt="brand-icon"
@@ -67,7 +74,9 @@ const OrderCardPaid = ({ info }: props) => {
             height={50}
           />
         )}
-        <h3 className="text-dark-blue">{info.carTypeName}</h3>
+        <h3 className={`text-dark-blue`}>
+          {info.carTypeName.split(" ").length > 1 ? "VOT" : info.carTypeName}
+        </h3>
 
         <a
           href={`tel:+19548686754`}
@@ -92,18 +101,27 @@ const OrderCardPaid = ({ info }: props) => {
 
         <div className="flex  items-center gap-2">
           <h2 className="text-[17px] font-bold text-dark-blue">{`$${info.price}`}</h2>
-          {info.paymentType === "credit" ? (
+          {info.paymentType === "credit" && (
             <Image
               src="/icons/credit-card-2.svg"
               width={20}
               height={10}
-              alt="credit.card-icon"
+              alt="credit-card-icon"
             />
-          ) : (
+          )}
+          {info.paymentType === "cash" && (
             <Image
               src="/icons/cash-icon.svg"
               width={20}
               height={10}
+              alt="credit.card-icon"
+            />
+          )}
+          {info.paymentType === "" && (
+            <Image
+              src="/icons/cash-credit-icon.svg"
+              width={30}
+              height={20}
               alt="credit.card-icon"
             />
           )}
