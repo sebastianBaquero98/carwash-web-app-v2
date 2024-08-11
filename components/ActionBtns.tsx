@@ -1,21 +1,22 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
+// import Image from "next/image";
 import { orderChangeState } from "@/lib/actions/order.actions";
 import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import CashoutDialog from "./CashoutDialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogDescription,
+//   DialogFooter,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogTrigger,
+// } from "@/components/ui/dialog";
+// import { Input } from "@/components/ui/input";
 import { updateLocationMetricsChangeState } from "@/lib/actions/location-metrics.action";
+import DeleteDialog from "./DeleteDialog";
 
 interface props {
   state: string;
@@ -159,36 +160,7 @@ const ActionBtns = ({
           +
         </p>
       </button>
-
-      <Dialog>
-        <DialogTrigger asChild>
-          <Image
-            src="/icons/trash-icon.svg"
-            width={40}
-            height={40}
-            alt="trash-icon"
-          />
-        </DialogTrigger>
-        <DialogContent className="bg-bone-white text-dark-blue sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Delete Order</DialogTitle>
-            <DialogDescription>
-              Are you sure yoy want to delete this order?
-            </DialogDescription>
-          </DialogHeader>
-
-          <Input
-            placeholder="Write the reason"
-            className="col-span-3 text-dark-blue"
-          />
-
-          <DialogFooter>
-            <Button className="bg-navy-blue  text-bone-white">
-              Confirm Delete
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <DeleteDialog id={shardId} orderId={orderId} locationId={locationId} />
     </div>
   );
 };

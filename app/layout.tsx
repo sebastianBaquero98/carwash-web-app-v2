@@ -2,7 +2,11 @@ import React from "react";
 import "./globals.css";
 import localFont from "next/font/local";
 import Provider from "@/context/Provider";
-import Head from "next/head";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Car Wash Solutions",
+};
 
 const myFont = localFont({
   src: [
@@ -29,12 +33,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1"
-        />
-      </Head>
       <Provider>
         <body className={`${myFont.variable} font-sans`}>{children}</body>
       </Provider>

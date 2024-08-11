@@ -1,5 +1,7 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
+import DeleteDialog from "./DeleteDialog";
 
 interface props {
   info: {
@@ -22,7 +24,7 @@ interface props {
     extraServices?: string;
     garageId: string;
     key: string;
-    locationI: string;
+    locationId: string;
     orderId: string;
     orderState: string;
     paid?: string;
@@ -41,6 +43,37 @@ interface props {
 }
 
 const OrderCardPaid = ({ info }: props) => {
+  const [isSendSuccessfull, setIsSendSuccessful] = useState(false);
+
+  const handleSend = async (
+    e: React.MouseEvent<HTMLImageElement>,
+    to: string,
+    message: string
+  ) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("/api/send-sms", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ to, body: message }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        console.log("SMS sent successfully", data.messageId);
+        setIsSendSuccessful(true);
+        // Handle success (e.g., update UI)
+      } else {
+        console.error("Failed to send SMS", data.error);
+        // Handle error (e.g., show error message)
+      }
+    } catch (error) {
+      console.error("Error sending SMS", error);
+      setIsSendSuccessful(false);
+      // Handle network or other errors
+    }
+  };
   return (
     <div className="flex h-[100px] w-full  rounded-e-lg bg-white py-2 pe-4 ps-3">
       <div className=" flex w-[26%] flex-col items-start  justify-center">
@@ -150,7 +183,7 @@ const OrderCardPaid = ({ info }: props) => {
         )}
       </div>
       <div className="flex flex-col items-end justify-center gap-3 ">
-        {info.sentReviewMessage === "yes" ? (
+        {info.sentReviewMessage === "yes" || isSendSuccessfull ? (
           <Image
             src="/icons/green-check.svg"
             width={35}
@@ -163,14 +196,19 @@ const OrderCardPaid = ({ info }: props) => {
             width={35}
             height={35}
             alt="send-icon"
+            onClick={(e) =>
+              handleSend(
+                e,
+                "+573134621452",
+                "We would love to get your feedback. Just click here:"
+              )
+            }
           />
         )}
-
-        <Image
-          src="/icons/trash-icon.svg"
-          width={40}
-          height={40}
-          alt="nissan"
+        <DeleteDialog
+          id={info.shardId}
+          orderId={info.orderId}
+          locationId={info.locationId}
         />
       </div>
     </div>

@@ -1,5 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import router from "next/router";
+import { type } from "os";
 
 const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 interface paramsUpdateLocationMetrics {
@@ -181,4 +183,58 @@ export async function updateLocationMetricsPay(
     }
   }
   revalidatePath("/orders");
+}
+
+export async function updateLocationMetricsDelete(
+  accessToken: string,
+  locationId: string,
+  date: string,
+  carState: string,
+  price: string,
+  orderId: string,
+  hasTip: boolean,
+  tipType: string,
+  tipValue: string,
+  isMultiple: boolean,
+  paymentInCash: string,
+  paymentInCredit: string,
+  paymentType: boolean
+) {
+  // ESTA ARMADO LOS RAWS FALTA MANDARLOS
+  if (isMultiple) {
+    const raw = JSON.stringify({
+      id: locationId,
+      date,
+      type: "deleteOrder",
+      carState,
+      value: parseFloat(paymentInCash),
+      orderId,
+      tipType,
+      paymentType: "cash",
+      tipValue: parseFloat(tipValue),
+    });
+    const raw1 = JSON.stringify({
+      id: locationId,
+      date,
+      type: "deleteOrderCredit",
+      carState,
+      value: parseFloat(paymentInCredit),
+      orderId,
+      tipType,
+      paymentType: "credit",
+      tipValue: parseFloat(tipValue),
+    });
+  } else {
+    const raw = JSON.stringify({
+      id: locationId,
+      date,
+      type: "deleteOrder",
+      carState,
+      value: parseFloat(price),
+      orderId,
+      tipType,
+      tipValue: parseFloat(tipValue),
+      paymentType,
+    });
+  }
 }

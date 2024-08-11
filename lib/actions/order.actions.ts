@@ -1,5 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import router from "next/router";
 
 const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 
@@ -151,5 +152,42 @@ export async function payOrder(
     body: JSON.stringify(raw),
     redirect: "follow",
   });
-  // revalidatePath("/orders");
+}
+
+export async function deleteOrder(
+  accessToken: string,
+  id: string,
+  orderId: string,
+  locationId: string
+) {
+  console.log("entro 2");
+  try {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", "Bearer " + accessToken);
+
+    const raw = JSON.stringify({
+      id,
+      orderId,
+      locationId,
+    });
+
+    await fetch(process.env.NEXT_PUBLIC_ENDPOINTURL + "order", {
+      method: "DELETE",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    });
+
+    // if (!response.ok) {
+    //   throw new Error(`HTTP error! status: ${response.status}`);
+    // }
+
+    // const result = await response.json();
+    // return result;
+    revalidatePath("/orders");
+  } catch (error) {
+    console.error("Error deleting order:", error);
+    throw error; // Re-throw the error if you want calling code to handle it
+  }
 }
