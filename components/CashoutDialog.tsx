@@ -14,6 +14,7 @@ import { useState } from "react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { payOrder } from "@/lib/actions/order.actions";
+import { updateLocationMetricsPay } from "@/lib/actions/location-metrics.action";
 
 interface props {
   price: number;
@@ -21,9 +22,19 @@ interface props {
   shardId: string;
   orderId: string;
   state: string;
+  locationId: string;
+  date: string;
 }
 
-const CashoutDialog = ({ price, isBefore, shardId, orderId, state }: props) => {
+const CashoutDialog = ({
+  price,
+  isBefore,
+  shardId,
+  orderId,
+  state,
+  locationId,
+  date,
+}: props) => {
   const { data: session } = useSession();
   const [selectedPaymentType, setSelectedPaymentType] = useState("");
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
@@ -38,8 +49,6 @@ const CashoutDialog = ({ price, isBefore, shardId, orderId, state }: props) => {
   }
 
   const handleCashout = () => {
-    console.log("shardId", shardId);
-    console.log("orderId", orderId);
     const newState = isBefore ? state : "P";
     const isMutiple = selectedPaymentType === "multiple";
     const hasTip = inputTip !== "";
@@ -59,6 +68,20 @@ const CashoutDialog = ({ price, isBefore, shardId, orderId, state }: props) => {
       paymentMethod,
       tipType,
       tipValue,
+      cash,
+      credit
+    );
+    updateLocationMetricsPay(
+      accessToken,
+      isMutiple,
+      hasTip,
+      locationId,
+      date,
+      orderId,
+      price,
+      tipValue,
+      tipType,
+      paymentMethod,
       cash,
       credit
     );
@@ -124,7 +147,7 @@ const CashoutDialog = ({ price, isBefore, shardId, orderId, state }: props) => {
                 <Label className="text-right">Cash</Label>
                 <Input
                   type="number"
-                  className="col-span-3"
+                  className="col-span-3 text-[16px]"
                   value={inputCash}
                   onChange={(e) => setInputCash(e.target.value)}
                 />
@@ -135,7 +158,7 @@ const CashoutDialog = ({ price, isBefore, shardId, orderId, state }: props) => {
                 </Label>
                 <Input
                   type="number"
-                  className="col-span-3"
+                  className="col-span-3 text-[16px]"
                   value={inputCredit}
                   onChange={(e) => setInputCredit(e.target.value)}
                 />
@@ -148,7 +171,7 @@ const CashoutDialog = ({ price, isBefore, shardId, orderId, state }: props) => {
               Tip Value
             </Label>
             <Input
-              className="col-span-3"
+              className="col-span-3 text-[16px]"
               value={inputTip}
               type="number"
               onChange={(e) => setInputTip(e.target.value)}
@@ -169,11 +192,6 @@ const CashoutDialog = ({ price, isBefore, shardId, orderId, state }: props) => {
             </Button>
           </div>
         </div>
-
-        {/* <Input
-      placeholder="Write the reason"
-      className="col-span-3 text-dark-blue"
-    /> */}
 
         <DialogFooter>
           <Button

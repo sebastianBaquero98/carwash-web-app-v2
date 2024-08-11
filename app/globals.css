@@ -16,6 +16,19 @@
   }
 }
 
+@layer utilities {
+  .primary-text-gradient {
+    background: linear-gradient(129deg, #7183e4 0%, #c66573 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .primary-gradient {
+    fill: linear-gradient(129deg, #7183e4 0%, #c66573 100%);
+    shape-rendering: crispEdges;
+  }
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(

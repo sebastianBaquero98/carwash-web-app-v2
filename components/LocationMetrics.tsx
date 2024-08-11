@@ -19,9 +19,10 @@ interface props {
     totalSales: number;
     totalTips: number;
   };
+  date: string;
 }
 
-const LocationMetrics = ({ info }: props) => {
+const LocationMetrics = ({ info, date }: props) => {
   return (
     <div className=" flex w-full flex-col items-center bg-navy-blue pb-3 pt-6">
       <div className="flex w-full justify-center gap-6">
@@ -35,8 +36,14 @@ const LocationMetrics = ({ info }: props) => {
         </div>
       </div>
       <div className="mt-5 flex w-full items-center justify-center gap-5">
-        <DatePicker />
-        <Button className="size-1 rounded-full bg-light-blue">X</Button>
+        <DatePicker pDate={date} />
+        <Image
+          src="/icons/filter-icon.svg"
+          width={25}
+          height={25}
+          alt="credit-card-icon"
+        />
+        {/* <Button className="size-1 rounded-full bg-light-blue">X</Button> */}
       </div>
 
       {/* <div className="mx-5 flex w-"> */}

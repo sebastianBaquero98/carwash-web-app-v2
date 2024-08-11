@@ -47,21 +47,11 @@ const ActionBtns = ({
     locationId = session.locationId;
   }
 
-  //   const handleClickStart = () => {
-  //     orderChangeState(accessToken, shardId, orderId, hasBays);
-  //     setActualState(hasBays ? "ST" : "S");
-  //   };
-
   const handleChangeState = () => {
     if (state === "NS") {
-      if (hasBays) {
-        orderChangeState(accessToken, shardId, orderId, "ST");
+      orderChangeState(accessToken, shardId, orderId, "S");
+      setActualState("S");
 
-        setActualState("ST");
-      } else {
-        orderChangeState(accessToken, shardId, orderId, "S");
-        setActualState("S");
-      }
       updateLocationMetricsChangeState(
         accessToken,
         "orderStart",
@@ -69,12 +59,33 @@ const ActionBtns = ({
         orderId,
         locationId
       );
-    } else if (state === "ST") {
-      orderChangeState(accessToken, shardId, orderId, "S");
-      setActualState("S");
     } else if (state === "S") {
+      if (hasBays) {
+        orderChangeState(accessToken, shardId, orderId, "ST");
+
+        setActualState("ST");
+      } else {
+        if (isPaid) {
+          orderChangeState(accessToken, shardId, orderId, "P");
+          setActualState("P");
+        } else {
+          orderChangeState(accessToken, shardId, orderId, "UP");
+
+          setActualState("UP");
+        }
+        updateLocationMetricsChangeState(
+          accessToken,
+          "orderFinish",
+          date,
+          orderId,
+          locationId,
+          estimatedPickUpTime
+        );
+      }
+    } else if (state === "ST") {
       if (isPaid) {
         orderChangeState(accessToken, shardId, orderId, "P");
+        setActualState("P");
       } else {
         orderChangeState(accessToken, shardId, orderId, "UP");
         setActualState("UP");
@@ -104,6 +115,16 @@ const ActionBtns = ({
       {actualState === "ST" && (
         <button
           onClick={handleChangeState}
+          className="flex size-[30px] items-center justify-center rounded-full bg-f1-red"
+        >
+          <p className="mt-2 size-[30px] items-center justify-center text-center">
+            F
+          </p>
+        </button>
+      )}
+      {actualState === "S" && hasBays && (
+        <button
+          onClick={handleChangeState}
           className="flex size-[30px] items-center justify-center rounded-full bg-rolex-green"
         >
           <p className="mt-2 size-[30px] items-center justify-center text-center">
@@ -111,7 +132,7 @@ const ActionBtns = ({
           </p>
         </button>
       )}
-      {actualState === "S" && (
+      {actualState === "S" && !hasBays && (
         <button
           onClick={handleChangeState}
           className="flex size-[30px] items-center justify-center rounded-full bg-f1-red"
@@ -128,6 +149,8 @@ const ActionBtns = ({
           orderId={orderId}
           price={price}
           state={actualState}
+          date={date}
+          locationId={locationId}
         />
       )}
 

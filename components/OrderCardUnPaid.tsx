@@ -24,7 +24,7 @@ interface props {
     extraServices?: string;
     garageId: string;
     key: string;
-    locationI: string;
+    locationId: string;
     orderId: string;
     orderState: string;
     paid?: boolean;
@@ -55,6 +55,7 @@ const OrderCardUnPaid = ({ info, hasBays }: props) => {
         info.carMake === "Lamborghini" ||
         info.carMake === "Honda" ||
         info.carMake === "Volkswagen" ||
+        info.carMake === "Ferrari" ||
         info.carMake === "Porsche" ? (
           <Image
             alt="brand-icon"
@@ -107,7 +108,7 @@ const OrderCardUnPaid = ({ info, hasBays }: props) => {
           )}
           {info.paid && info.paymentType === "cash" && (
             <Image
-              src="/icons/credit-card-2.svg"
+              src="/icons/cash-icon.svg"
               width={20}
               height={10}
               alt="credit.card-icon"
@@ -138,6 +139,8 @@ const OrderCardUnPaid = ({ info, hasBays }: props) => {
               shardId={info.shardId}
               orderId={info.orderId}
               state={info.orderState}
+              locationId={info.locationId}
+              date={info.date}
             />
           )}
         </div>

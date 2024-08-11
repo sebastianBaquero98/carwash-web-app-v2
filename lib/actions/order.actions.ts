@@ -6,7 +6,9 @@ const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 interface paramsChangeStateOrder {
   id: any;
   orderId: any;
-  dateHourStart: string;
+  dateHourStart?: string;
+  dateHourStartTunnel?: string;
+  dateHourFinish?: string;
   tz: string;
   orderState?: string;
 }
@@ -38,6 +40,35 @@ export async function getOrders(accessToken: string, locationId: string) {
   return result;
 }
 
+export async function getOrdersByDate(
+  accessToken: string,
+  locationId: string,
+  dateFilter: string
+) {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Authorization", "Bearer " + accessToken);
+
+  const raw = JSON.stringify({
+    locationId,
+    date: dateFilter,
+  });
+
+  const response = await fetch(
+    process.env.NEXT_PUBLIC_ENDPOINTURL + "orders/date",
+    {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+      cache: "force-cache",
+    }
+  );
+  const result = await response.json();
+
+  return result.Items;
+}
+
 export async function orderChangeState(
   accessToken: string,
   shardId: string,
@@ -48,12 +79,22 @@ export async function orderChangeState(
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Authorization", "Bearer " + accessToken);
 
+  const orderState =
+    newState === "ST"
+      ? "dateHourStartTunel"
+      : newState === "S"
+        ? "dateHourStart"
+        : newState === "UP"
+          ? "dateHourFinish"
+          : newState === "P"
+            ? "dateHourFinish"
+            : "";
   const raw: paramsChangeStateOrder = {
     id: shardId,
     orderId,
-    dateHourStart: "",
-    orderState: newState,
+    [orderState]: "",
     tz: timeZone,
+    orderState: newState,
   };
 
   await fetch(process.env.NEXT_PUBLIC_ENDPOINTURL + "order", {
@@ -103,12 +144,12 @@ export async function payOrder(
     raw.tipType = "tip/" + tipType;
     raw.tipValue = tipValue;
   }
-  // console.log("this is raw,", raw);
+
   fetch(process.env.NEXT_PUBLIC_ENDPOINTURL + "order", {
     method: "PUT",
     headers: myHeaders,
     body: JSON.stringify(raw),
     redirect: "follow",
   });
-  revalidatePath("/orders");
+  // revalidatePath("/orders");
 }
