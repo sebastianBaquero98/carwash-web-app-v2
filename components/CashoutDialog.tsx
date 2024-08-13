@@ -16,6 +16,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { payOrder } from "@/lib/actions/order.actions";
 import { updateLocationMetricsPay } from "@/lib/actions/location-metrics.action";
+import { isValid } from "date-fns";
 
 interface props {
   price: number;
@@ -49,6 +50,41 @@ const CashoutDialog = ({
   if (session) {
     accessToken = session.id_token;
   }
+
+  const isValid = () => {
+    if (selectedPaymentType === "single") {
+      return selectedPaymentMethod !== "";
+    } else if (selectedPaymentType === "multiple") {
+      const decimalRegex = /^([^,]*\.\d{1,2}|[0-9]+)$/;
+      const isValidDecimal = (value: string) => decimalRegex.test(value);
+
+      if (isValidDecimal(inputCash) && isValidDecimal(inputCredit)) {
+        const sum = (parseFloat(inputCash) + parseFloat(inputCredit)).toFixed(
+          2
+        );
+        return (
+          inputCash !== "" &&
+          inputCredit !== "" &&
+          sum === price.toFixed(2).toString()
+        );
+      } else {
+        return false;
+      }
+    }
+  };
+
+  const isTipValid = () => {
+    if (inputTip !== "") {
+      const decimalRegex = /^([^,]*\.\d{1,2}|[0-9]+)$/;
+      const isValidDecimal = (value: string) => decimalRegex.test(value);
+      if (isValidDecimal(inputTip)) {
+        return selectedTipType !== "";
+      } else {
+        return false;
+      }
+    }
+    return true;
+  };
 
   const handleCashout = () => {
     const newState = isBefore ? state : "P";
@@ -132,13 +168,21 @@ const CashoutDialog = ({
           {selectedPaymentType === "single" && (
             <div className="flex items-center gap-4">
               <Button
-                onClick={() => setSelectedPaymentMethod("cash")}
+                onClick={() =>
+                  selectedPaymentMethod === "cash"
+                    ? setSelectedPaymentMethod("")
+                    : setSelectedPaymentMethod("cash")
+                }
                 className={` text-bone-white ${selectedPaymentMethod === "cash" ? "bg-navy-blue" : "bg-slate-500"}`}
               >
                 Cash
               </Button>
               <Button
-                onClick={() => setSelectedPaymentMethod("credit")}
+                onClick={() =>
+                  selectedPaymentMethod === "credit"
+                    ? setSelectedPaymentMethod("")
+                    : setSelectedPaymentMethod("credit")
+                }
                 className={`  text-bone-white ${selectedPaymentMethod === "credit" ? "bg-navy-blue" : "bg-slate-500"}`}
               >
                 Credit
@@ -150,7 +194,8 @@ const CashoutDialog = ({
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label className="text-right">Cash</Label>
                 <Input
-                  type="number"
+                  type="text"
+                  pattern="[0-9]*\.?[0-9]{1,2}"
                   className="col-span-3 text-[16px]"
                   value={inputCash}
                   onChange={(e) => setInputCash(e.target.value)}
@@ -161,7 +206,8 @@ const CashoutDialog = ({
                   Credit
                 </Label>
                 <Input
-                  type="number"
+                  type="text"
+                  pattern="[0-9]*\.?[0-9]{1,2}"
                   className="col-span-3 text-[16px]"
                   value={inputCredit}
                   onChange={(e) => setInputCredit(e.target.value)}
@@ -175,21 +221,30 @@ const CashoutDialog = ({
               Tip Value
             </Label>
             <Input
+              type="text"
+              pattern="[0-9]*\.?[0-9]{1,2}"
               className="col-span-3 text-[16px]"
               value={inputTip}
-              type="number"
               onChange={(e) => setInputTip(e.target.value)}
             />
           </div>
           <div className="flex items-center gap-4">
             <Button
-              onClick={() => setSelectedTipType("cash")}
+              onClick={() =>
+                selectedTipType === "cash"
+                  ? setSelectedTipType("")
+                  : setSelectedTipType("cash")
+              }
               className={` text-bone-white ${selectedTipType === "cash" ? "bg-navy-blue" : "bg-slate-500"}`}
             >
               Cash
             </Button>
             <Button
-              onClick={() => setSelectedTipType("credit")}
+              onClick={() =>
+                selectedTipType === "credit"
+                  ? setSelectedTipType("")
+                  : setSelectedTipType("credit")
+              }
               className={`  text-bone-white ${selectedTipType === "credit" ? "bg-navy-blue" : "bg-slate-500"}`}
             >
               Credit
@@ -201,9 +256,13 @@ const CashoutDialog = ({
           <Button
             onClick={handleCashout}
             className="bg-rolex-green  text-bone-white"
-            disabled={isPending}
+            disabled={isPending || !isValid() || !isTipValid()}
           >
-            {isPending ? "Loading..." : "Confirm Cashout"}
+            {isPending
+              ? "Loading..."
+              : !isValid() || !isTipValid()
+                ? "Check Fields"
+                : "Confirm Checkout"}
           </Button>
         </DialogFooter>
       </DialogContent>
