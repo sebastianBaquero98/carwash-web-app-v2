@@ -11,20 +11,44 @@ import {
 
 import Image from "next/image";
 import { Input } from "./ui/input";
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { deleteOrder } from "@/lib/actions/order.actions";
 import { useSession } from "next-auth/react";
+import { updateLocationMetricsDelete } from "@/lib/actions/location-metrics.action";
 
 interface props {
   id: string;
   orderId: string;
   locationId: string;
+  date: string;
+  carState: string;
+  price: number;
+  tipType: string;
+  tipValue: string;
+  paymentInCash: string;
+  paymentInCredit: string;
+  paymentType: string;
+  isMultiple: boolean;
 }
 
-const DeleteDialog = ({ id, orderId, locationId }: props) => {
+const DeleteDialog = ({
+  id,
+  orderId,
+  locationId,
+  date,
+  carState,
+  price,
+  tipType,
+  tipValue,
+  paymentInCash,
+  paymentInCredit,
+  paymentType,
+  isMultiple,
+}: props) => {
   const { data: session } = useSession();
   const [inputReason, setInputReason] = useState("");
+  const [isPending, startTransition] = useTransition();
 
   let accessToken = "";
   if (session) {
@@ -33,8 +57,23 @@ const DeleteDialog = ({ id, orderId, locationId }: props) => {
   const handleDelete = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    console.log("entro");
-    deleteOrder(accessToken, id, orderId, locationId);
+    startTransition(async () => {
+      await deleteOrder(accessToken, id, orderId, locationId);
+      await updateLocationMetricsDelete(
+        accessToken,
+        locationId,
+        date,
+        carState,
+        price,
+        orderId,
+        tipType,
+        tipValue,
+        isMultiple,
+        paymentInCash,
+        paymentInCredit,
+        paymentType
+      );
+    });
   };
   return (
     <Dialog>
@@ -64,9 +103,9 @@ const DeleteDialog = ({ id, orderId, locationId }: props) => {
           <Button
             onClick={(e) => handleDelete(e)}
             className="bg-navy-blue  text-bone-white"
-            disabled={!(inputReason.length > 1)}
+            disabled={!(inputReason.length > 1) || isPending}
           >
-            Confirm Delete
+            {isPending ? "Deleting..." : "Confirm Delete"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -99,7 +99,6 @@ export async function updateLocationMetricsPay(
       value: parseFloat(credit),
       orderId,
     });
-    console.log("this is raw", raw);
     const response1 = await fetch(
       process.env.NEXT_PUBLIC_ENDPOINTURL + "location-metrics",
       {
@@ -123,7 +122,6 @@ export async function updateLocationMetricsPay(
         value: parseFloat(cash),
         orderId,
       });
-      console.log("this is raw1", raw1);
       const response2 = await fetch(
         process.env.NEXT_PUBLIC_ENDPOINTURL + "location-metrics",
         {
@@ -147,7 +145,6 @@ export async function updateLocationMetricsPay(
       value: amount,
       orderId,
     });
-    console.log("this is raw2", raw2);
     const response3 = await fetch(
       process.env.NEXT_PUBLIC_ENDPOINTURL + "location-metrics",
       {
@@ -173,7 +170,6 @@ export async function updateLocationMetricsPay(
         value: parseFloat(tip),
         orderId,
       });
-      console.log("this is raw3", raw3);
       await fetch(process.env.NEXT_PUBLIC_ENDPOINTURL + "location-metrics", {
         method: "PUT",
         headers: myHeaders,
@@ -190,16 +186,18 @@ export async function updateLocationMetricsDelete(
   locationId: string,
   date: string,
   carState: string,
-  price: string,
+  price: number,
   orderId: string,
-  hasTip: boolean,
   tipType: string,
   tipValue: string,
   isMultiple: boolean,
   paymentInCash: string,
   paymentInCredit: string,
-  paymentType: boolean
+  paymentType: string
 ) {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Authorization", "Bearer " + accessToken);
   // ESTA ARMADO LOS RAWS FALTA MANDARLOS
   if (isMultiple) {
     const raw = JSON.stringify({
@@ -213,6 +211,15 @@ export async function updateLocationMetricsDelete(
       paymentType: "cash",
       tipValue: parseFloat(tipValue),
     });
+
+    // SEND REQUEST
+    await fetch(process.env.NEXT_PUBLIC_ENDPOINTURL + "location-metrics", {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    });
+
     const raw1 = JSON.stringify({
       id: locationId,
       date,
@@ -220,21 +227,36 @@ export async function updateLocationMetricsDelete(
       carState,
       value: parseFloat(paymentInCredit),
       orderId,
-      tipType,
+      // tipType,
       paymentType: "credit",
-      tipValue: parseFloat(tipValue),
+      // tipValue: parseFloat(tipValue),
+    });
+
+    await fetch(process.env.NEXT_PUBLIC_ENDPOINTURL + "location-metrics", {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw1,
+      redirect: "follow",
     });
   } else {
-    const raw = JSON.stringify({
+    const raw2 = JSON.stringify({
       id: locationId,
       date,
       type: "deleteOrder",
       carState,
-      value: parseFloat(price),
+      value: price,
       orderId,
       tipType,
       tipValue: parseFloat(tipValue),
       paymentType,
     });
+
+    await fetch(process.env.NEXT_PUBLIC_ENDPOINTURL + "location-metrics", {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw2,
+      redirect: "follow",
+    });
   }
+  revalidatePath("/orders");
 }

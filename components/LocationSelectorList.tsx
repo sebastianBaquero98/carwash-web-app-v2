@@ -21,8 +21,8 @@ const LocationSelectorList = ({ locations }: props) => {
     pHasBays: string,
     pReviewLink: string
   ) => {
-    console.log("this is pId", pId);
-    console.log("this is pHasBays", pHasBays);
+    // console.log("this is pId", pId);
+    // console.log("this is pHasBays", pHasBays);
     await update({ locationId: pId, hasBays: pHasBays });
     // localStorage.setItem("locationId", pId);
     // localStorage.setItem("locationName", pName);

@@ -160,7 +160,6 @@ export async function deleteOrder(
   orderId: string,
   locationId: string
 ) {
-  console.log("entro 2");
   try {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -179,13 +178,7 @@ export async function deleteOrder(
       redirect: "follow",
     });
 
-    // if (!response.ok) {
-    //   throw new Error(`HTTP error! status: ${response.status}`);
-    // }
-
-    // const result = await response.json();
-    // return result;
-    revalidatePath("/orders");
+    // revalidatePath("/orders");
   } catch (error) {
     console.error("Error deleting order:", error);
     throw error; // Re-throw the error if you want calling code to handle it

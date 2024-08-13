@@ -5,16 +5,7 @@ import { orderChangeState } from "@/lib/actions/order.actions";
 import { useSession } from "next-auth/react";
 // import { Button } from "@/components/ui/button";
 import CashoutDialog from "./CashoutDialog";
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogDescription,
-//   DialogFooter,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogTrigger,
-// } from "@/components/ui/dialog";
-// import { Input } from "@/components/ui/input";
+
 import { updateLocationMetricsChangeState } from "@/lib/actions/location-metrics.action";
 import DeleteDialog from "./DeleteDialog";
 
@@ -27,6 +18,12 @@ interface props {
   date: string;
   estimatedPickUpTime: string;
   price: number;
+  tipType: string;
+  tipValue: string;
+  isMultiple: boolean;
+  paymentInCash: string;
+  paymentInCredit: string;
+  paymentType: string;
 }
 
 const ActionBtns = ({
@@ -38,6 +35,12 @@ const ActionBtns = ({
   date,
   estimatedPickUpTime,
   price,
+  tipType,
+  tipValue,
+  isMultiple,
+  paymentInCash,
+  paymentInCredit,
+  paymentType,
 }: props) => {
   const { data: session } = useSession();
   const [actualState, setActualState] = useState(state);
@@ -50,8 +53,8 @@ const ActionBtns = ({
 
   const handleChangeState = () => {
     if (state === "NS") {
-      orderChangeState(accessToken, shardId, orderId, "S");
       setActualState("S");
+      orderChangeState(accessToken, shardId, orderId, "S");
 
       updateLocationMetricsChangeState(
         accessToken,
@@ -62,17 +65,15 @@ const ActionBtns = ({
       );
     } else if (state === "S") {
       if (hasBays) {
-        orderChangeState(accessToken, shardId, orderId, "ST");
-
         setActualState("ST");
+        orderChangeState(accessToken, shardId, orderId, "ST");
       } else {
         if (isPaid) {
-          orderChangeState(accessToken, shardId, orderId, "P");
           setActualState("P");
+          orderChangeState(accessToken, shardId, orderId, "P");
         } else {
-          orderChangeState(accessToken, shardId, orderId, "UP");
-
           setActualState("UP");
+          orderChangeState(accessToken, shardId, orderId, "UP");
         }
         updateLocationMetricsChangeState(
           accessToken,
@@ -85,11 +86,11 @@ const ActionBtns = ({
       }
     } else if (state === "ST") {
       if (isPaid) {
-        orderChangeState(accessToken, shardId, orderId, "P");
         setActualState("P");
+        orderChangeState(accessToken, shardId, orderId, "P");
       } else {
-        orderChangeState(accessToken, shardId, orderId, "UP");
         setActualState("UP");
+        orderChangeState(accessToken, shardId, orderId, "UP");
       }
       updateLocationMetricsChangeState(
         accessToken,
@@ -160,7 +161,20 @@ const ActionBtns = ({
           +
         </p>
       </button>
-      <DeleteDialog id={shardId} orderId={orderId} locationId={locationId} />
+      <DeleteDialog
+        id={shardId}
+        orderId={orderId}
+        locationId={locationId}
+        date={date}
+        carState={actualState}
+        price={price}
+        tipType={tipType}
+        tipValue={tipValue}
+        isMultiple={isMultiple}
+        paymentInCash={paymentInCash}
+        paymentInCredit={paymentInCredit}
+        paymentType={paymentType}
+      />
     </div>
   );
 };

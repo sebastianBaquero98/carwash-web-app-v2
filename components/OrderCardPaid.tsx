@@ -61,15 +61,15 @@ const OrderCardPaid = ({ info }: props) => {
       });
       const data = await response.json();
       if (data.success) {
-        console.log("SMS sent successfully", data.messageId);
+        // console.log("SMS sent successfully", data.messageId);
         setIsSendSuccessful(true);
         // Handle success (e.g., update UI)
       } else {
-        console.error("Failed to send SMS", data.error);
+        // console.error("Failed to send SMS", data.error);
         // Handle error (e.g., show error message)
       }
     } catch (error) {
-      console.error("Error sending SMS", error);
+      // console.error("Error sending SMS", error);
       setIsSendSuccessful(false);
       // Handle network or other errors
     }
@@ -209,6 +209,15 @@ const OrderCardPaid = ({ info }: props) => {
           id={info.shardId}
           orderId={info.orderId}
           locationId={info.locationId}
+          date={info.date}
+          carState={info.orderState}
+          price={info.price}
+          tipType={info.tipType ? info.tipType : ""}
+          tipValue={info.tipValue ? info.tipValue : ""}
+          paymentInCash={info.paymentInCash ? info.paymentInCash : ""}
+          paymentInCredit={info.paymentInCredit ? info.paymentInCredit : ""}
+          paymentType={info.paymentType ? info.paymentType : ""}
+          isMultiple={info.paymentType === ""}
         />
       </div>
     </div>

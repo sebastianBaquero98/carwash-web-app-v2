@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+
 import {
   Dialog,
   DialogContent,
@@ -10,7 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { payOrder } from "@/lib/actions/order.actions";
@@ -42,6 +43,7 @@ const CashoutDialog = ({
   const [inputCash, setInputCash] = useState("");
   const [inputCredit, setInputCredit] = useState("");
   const [selectedTipType, setSelectedTipType] = useState("");
+  const [isPending, startTransition] = useTransition();
 
   let accessToken = "";
   if (session) {
@@ -57,34 +59,36 @@ const CashoutDialog = ({
     const tipValue = hasTip ? inputTip : "";
     const cash = isMutiple ? inputCash : "";
     const credit = isMutiple ? inputCredit : "";
-    payOrder(
-      accessToken,
-      shardId,
-      orderId,
-      newState,
-      isBefore,
-      isMutiple,
-      hasTip,
-      paymentMethod,
-      tipType,
-      tipValue,
-      cash,
-      credit
-    );
-    updateLocationMetricsPay(
-      accessToken,
-      isMutiple,
-      hasTip,
-      locationId,
-      date,
-      orderId,
-      price,
-      tipValue,
-      tipType,
-      paymentMethod,
-      cash,
-      credit
-    );
+    startTransition(async () => {
+      await payOrder(
+        accessToken,
+        shardId,
+        orderId,
+        newState,
+        isBefore,
+        isMutiple,
+        hasTip,
+        paymentMethod,
+        tipType,
+        tipValue,
+        cash,
+        credit
+      );
+      await updateLocationMetricsPay(
+        accessToken,
+        isMutiple,
+        hasTip,
+        locationId,
+        date,
+        orderId,
+        price,
+        tipValue,
+        tipType,
+        paymentMethod,
+        cash,
+        credit
+      );
+    });
   };
   return (
     <Dialog>
@@ -197,8 +201,9 @@ const CashoutDialog = ({
           <Button
             onClick={handleCashout}
             className="bg-rolex-green  text-bone-white"
+            disabled={isPending}
           >
-            Confirm Cashout
+            {isPending ? "Loading..." : "Confirm Cashout"}
           </Button>
         </DialogFooter>
       </DialogContent>

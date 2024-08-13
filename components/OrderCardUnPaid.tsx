@@ -177,6 +177,12 @@ const OrderCardUnPaid = ({ info, hasBays }: props) => {
         date={info.date}
         estimatedPickUpTime={info.estimatedPickUpTime}
         price={info.price}
+        tipType=""
+        tipValue=""
+        isMultiple={false}
+        paymentInCash=""
+        paymentInCredit=""
+        paymentType=""
       />
     </div>
   );
