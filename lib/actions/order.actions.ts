@@ -1,6 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import router from "next/router";
+import { getFormattedDate } from "../utils";
 
 const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 
@@ -67,6 +67,24 @@ export async function getOrdersByDate(
   );
   const result = await response.json();
 
+  return result.Items;
+}
+
+export async function getUnPaidOrders(accessToken: string, locationId: string) {
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", "Bearer " + accessToken);
+  const date = getFormattedDate();
+  const response = await fetch(
+    process.env.NEXT_PUBLIC_ENDPOINTURL +
+      `orders/unpaid?locationId=${locationId}&date=${date}`,
+    {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    }
+  );
+
+  const result = await response.json();
   return result.Items;
 }
 

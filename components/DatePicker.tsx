@@ -27,7 +27,10 @@ const DatePicker = ({ pDate }: props) => {
   // Lo que hare es agregar el parametro a la URL de la fecha seleccionada por el cliente
   const handleSelectDate = (event: any) => {
     const params = new URLSearchParams(searchParams);
-
+    const filterParams = searchParams.get("isFilter");
+    if (filterParams) {
+      params.delete("isFilter");
+    }
     if (event) {
       const formattedDate: string = moment(event).format("YYYY-MM-DD");
       params.set("date", formattedDate);

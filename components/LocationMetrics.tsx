@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import DatePicker from "@/components/DatePicker";
 import Image from "next/image";
@@ -7,6 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import FilterButton from "./FilterButton";
 
 interface props {
   info: {
@@ -42,16 +44,9 @@ const LocationMetrics = ({ info, date }: props) => {
       </div>
       <div className="mt-5 flex w-full items-center justify-center gap-5">
         <DatePicker pDate={date} />
-        <Image
-          src="/icons/filter-icon.svg"
-          width={25}
-          height={25}
-          alt="credit-card-icon"
-        />
-        {/* <Button className="size-1 rounded-full bg-light-blue">X</Button> */}
+        <FilterButton />
       </div>
 
-      {/* <div className="mx-5 flex w-"> */}
       <div className="mt-4 flex w-[340px] justify-evenly rounded-[10px] bg-white py-3">
         <div className="flex flex-col justify-items-center">
           <div className="flex items-center gap-1">

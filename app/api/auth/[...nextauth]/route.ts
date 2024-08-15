@@ -30,6 +30,9 @@ export const authOptions: any = {
         if (session?.locationId) {
           token.locationId = session.locationId;
         }
+        if (session?.locationName) {
+          token.locationName = session.locationName;
+        }
         if (session || hasBaysKey) {
           token.hasBays = session.hasBays;
         }
@@ -54,6 +57,7 @@ export const authOptions: any = {
       session.tenantId = parsedToken["cognito:groups"][0];
       session.userName = parsedToken.username;
       session.locationId = token.locationId;
+      session.locationName = token.locationName;
       session.hasBays = token.hasBays;
       session.id_token = token.id_token;
       return session;

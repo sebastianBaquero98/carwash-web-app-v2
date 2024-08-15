@@ -2,18 +2,22 @@ import React from "react";
 
 import OrderCardPaid from "@/components/OrderCardPaid";
 import OrderCardUnPaid from "@/components/OrderCardUnPaid";
-import { getOrders, getOrdersByDate } from "@/lib/actions/order.actions";
+import {
+  getOrders,
+  getOrdersByDate,
+  getUnPaidOrders,
+} from "@/lib/actions/order.actions";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { getLocationMetrics } from "@/lib/actions/location-metrics.action";
 import LocationMetrics from "@/components/LocationMetrics";
-import NavBar from "@/components/NavBar";
+
 import { getFormattedDate } from "@/lib/utils";
 
 export default async function Orders({
   searchParams,
 }: {
-  searchParams: { date: string };
+  searchParams: { date: string; isFilter: string };
 }) {
   const session = await getServerSession(authOptions);
 
@@ -21,6 +25,8 @@ export default async function Orders({
   let locationMetrics = null;
   let hasBays = false;
   let queryDate = "";
+  let isFilter = false;
+
   if (!session) {
     return (
       <div className="flex flex-col items-center justify-center gap-1">
@@ -30,6 +36,7 @@ export default async function Orders({
     );
   } else {
     queryDate = searchParams.date ? searchParams.date : getFormattedDate();
+    isFilter = !!searchParams.isFilter;
 
     hasBays = session.hasBays;
     locationMetrics = await getLocationMetrics(
@@ -43,13 +50,14 @@ export default async function Orders({
         session.locationId,
         searchParams.date
       );
+    } else if (isFilter) {
+      orders = await getUnPaidOrders(session.id_token, session.locationId);
     } else {
       orders = await getOrders(session.id_token, session.locationId);
     }
   }
   return (
     <>
-      <NavBar />
       <LocationMetrics info={locationMetrics} date={queryDate} />
       <div className="me-4 mt-3 flex flex-col items-center gap-2">
         {orders.length > 0 &&

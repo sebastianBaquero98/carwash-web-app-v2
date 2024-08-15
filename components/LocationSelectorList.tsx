@@ -21,15 +21,14 @@ const LocationSelectorList = ({ locations }: props) => {
     pHasBays: string,
     pReviewLink: string
   ) => {
-    // console.log("this is pId", pId);
-    // console.log("this is pHasBays", pHasBays);
-    await update({ locationId: pId, hasBays: pHasBays });
-    // localStorage.setItem("locationId", pId);
-    // localStorage.setItem("locationName", pName);
-    // localStorage.setItem("hasBays", pHasBays);
-    // localStorage.setItem("reviewLink", pReviewLink);
-
-    router.push("/orders");
+    try {
+      await update({ locationId: pId, hasBays: pHasBays, locationName: pName });
+      router.push("/orders");
+      router.refresh(); // This refreshes the current route
+    } catch (error) {
+      console.error("Error updating session:", error);
+      // Handle the error appropriately
+    }
   };
   return (
     <div className="w-[319px] flex-col  rounded-2xl border-2 border-[orange] bg-bone-white py-2">
