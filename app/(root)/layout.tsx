@@ -13,14 +13,23 @@ export default async function RootLayoutInternal({
   const session = await getServerSession(authOptions);
 
   let locationName = "";
+  let userRole = "";
   if (session) {
+    // console.log("session", session);
+    const parsedToken = JSON.parse(
+      Buffer.from(session.id_token.split(".")[1], "base64").toString()
+    );
+
     locationName = session.locationName;
+    userRole = parsedToken["custom:userPosition"];
   }
   return (
     <html lang="en">
       <Provider>
         <body>
-          {locationName && <NavBar locationName={locationName} />}
+          {locationName && (
+            <NavBar locationName={locationName} userRole={userRole} />
+          )}
           {children}
         </body>
       </Provider>

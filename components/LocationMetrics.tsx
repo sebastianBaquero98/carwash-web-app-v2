@@ -2,6 +2,7 @@
 import React from "react";
 import DatePicker from "@/components/DatePicker";
 import Image from "next/image";
+import { Progress } from "@/components/ui/progress";
 
 import {
   Popover,
@@ -164,6 +165,7 @@ const LocationMetrics = ({ info, date }: props) => {
           <p className="text-dark-blue">|</p>
         </div> */}
       </div>
+      {/* <Progress className="mt-2 w-[90%] bg-mclaren-orange" value={80} /> */}
     </div>
   );
 };

@@ -11,8 +11,13 @@ import { Button } from "@/components/ui/button";
 
 interface props {
   locationName: string;
+  userRole: string;
 }
-const NavContent = () => {
+
+interface propsContent {
+  userRole: string;
+}
+const NavContent = ({ userRole }: propsContent) => {
   const pathname = usePathname();
 
   return (
@@ -21,31 +26,34 @@ const NavContent = () => {
         const isActive =
           (pathname.includes(link.route) && link.route.length > 1) ||
           pathname === link.route;
-        return (
-          <SheetClose asChild key={link.route}>
-            <Link
-              href={link.route}
-              className={`${
-                isActive ? "primary-gradient  rounded-lg" : ""
-              } flex items-center justify-start gap-4 bg-transparent p-4 `}
-            >
-              <p
-                className={`${isActive ? "text-[18px] font-bold leading-[140%]" : "text-[18px] font-medium leading-[25.2px]"}`}
+        if (link.authorized.includes(userRole)) {
+          return (
+            <SheetClose asChild key={link.route}>
+              <Link
+                href={link.route}
+                className={`${
+                  isActive ? "primary-gradient  rounded-lg" : ""
+                } flex items-center justify-start gap-4 bg-transparent p-4 `}
               >
-                {link.label}
-              </p>
-            </Link>
-          </SheetClose>
-        );
+                <p
+                  className={`${isActive ? "text-[18px] font-bold leading-[140%]" : "text-[18px] font-medium leading-[25.2px]"}`}
+                >
+                  {link.label}
+                </p>
+              </Link>
+            </SheetClose>
+          );
+        } else {
+          return "";
+        }
       })}
     </section>
   );
 };
 
-const NavBar = ({ locationName }: props) => {
+const NavBar = ({ locationName, userRole }: props) => {
   const [isClicked, setIsClicked] = useState(false);
   const handleToggle = () => {
-    console.log("entro");
     setIsClicked(!isClicked);
   };
   return (
@@ -61,7 +69,7 @@ const NavBar = ({ locationName }: props) => {
 
         <div>
           <SheetClose asChild>
-            <NavContent />
+            <NavContent userRole={userRole} />
           </SheetClose>
         </div>
       </SheetContent>
@@ -85,19 +93,6 @@ const NavBar = ({ locationName }: props) => {
         </SheetTrigger>
       </div>
     </Sheet>
-    // <div className="flex h-[40px] items-center justify-between bg-[#000] px-5 ">
-    //   <div className="flex items-center">
-    // <Image src="/icons/app-icon.jpg" width={25} height={25} alt="icon" />
-    //     <p className="primary-text-gradient ms-2 text-sm">Car Wash Solutions</p>
-    //   </div>
-    // <Image
-    //   src="/icons/gradient-hamburger.svg"
-    //   alt="menu"
-    //   width={25}
-    //   height={25}
-    //   className="primary-gradient"
-    // />
-    // </div>
   );
 };
 
