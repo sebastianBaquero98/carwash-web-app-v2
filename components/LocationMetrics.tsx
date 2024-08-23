@@ -87,25 +87,6 @@ const LocationMetrics = ({ info, date }: props) => {
               </div>
             </PopoverContent>
           </Popover>
-          {/* <HoverCard>
-            <HoverCardTrigger className="text-black">
-              <div className="flex items-center gap-1">
-                <Image
-                  src="/icons/money_yellow.svg"
-                  width={32}
-                  height={27}
-                  alt="credit-card-icon"
-                />
-                <p className="text-[13px] text-dark-blue">${info.totalTips}</p>
-              </div>
-            </HoverCardTrigger>
-            <HoverCardContent className="bg-navy-blue text-white ">
-              <div className="flex flex-col items-center justify-center">
-                <p>CASH: $15.99</p>
-                <p>CREDIT: $15.99</p>
-              </div>
-            </HoverCardContent>
-          </HoverCard> */}
         </div>
         <div className="flex items-center">
           <div className="flex flex-col items-center">
