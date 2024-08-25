@@ -74,14 +74,16 @@ const NavBar = ({ locationName, userRole }: props) => {
         </div>
       </SheetContent>
       <div className="flex h-[40px] items-center justify-between bg-[#000] px-5 ">
-        <div className="flex items-center">
-          <Image src="/icons/app-icon.jpg" width={25} height={25} alt="icon" />
-          <Button onClick={handleToggle}>
-            <p className="primary-text-gradient text-sm">
-              {!isClicked ? "Car Wash Solution" : locationName}
-            </p>
-          </Button>
-        </div>
+        <Link href={"/orders/create"}>
+          <Image src="/icons/add-icon.svg" width={27} height={27} alt="icon" />
+        </Link>
+        {/* <div className="flex items-center"> */}
+        <Button onClick={handleToggle}>
+          <p className="primary-text-gradient text-sm">
+            {!isClicked ? "Car Wash Solution" : locationName}
+          </p>
+        </Button>
+        {/* </div> */}
         <SheetTrigger asChild>
           <Image
             src="/icons/gradient-hamburger.svg"

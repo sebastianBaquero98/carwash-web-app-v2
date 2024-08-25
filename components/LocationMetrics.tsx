@@ -2,7 +2,6 @@
 import React from "react";
 import DatePicker from "@/components/DatePicker";
 import Image from "next/image";
-import { Progress } from "@/components/ui/progress";
 
 import {
   Popover,
@@ -26,6 +25,8 @@ interface props {
     totalPendingCars: number;
     totalSales: number;
     totalTips: number;
+    progress: number;
+    position: number;
   };
   date: string;
 }
@@ -146,7 +147,30 @@ const LocationMetrics = ({ info, date }: props) => {
           <p className="text-dark-blue">|</p>
         </div> */}
       </div>
-      {/* <Progress className="mt-2 w-[90%] bg-mclaren-orange" value={80} /> */}
+
+      {/* <div className="bg-black">1</div> */}
+      <div className="flex w-full items-center justify-center gap-1">
+        <div
+          className={`mt-2 size-[25px] items-center justify-center rounded-full ${info.position <= 3 ? "bg-rolex-green" : info.position <= 6 ? "bg-light-blue" : "bg-ferrari-red"} `}
+        >
+          <p className="mt-[5px] text-center align-middle text-xs">
+            {info.position}
+          </p>
+        </div>
+        <div className="mt-2 h-4 w-4/5 items-center rounded-full bg-slate-500 ">
+          <div
+            className="flex h-4 items-center justify-center rounded-full p-0.5 text-center align-middle text-xs font-medium leading-none text-white"
+            style={{
+              width: info.progress + "%",
+              backgroundImage:
+                "linear-gradient(129deg, #7183e4 0%, #c66573 100%)",
+            }}
+          >
+            {" "}
+            {info.progress}%
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
