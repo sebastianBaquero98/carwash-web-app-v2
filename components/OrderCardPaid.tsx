@@ -86,6 +86,7 @@ const OrderCardPaid = ({ info }: props) => {
         info.carMake === "Honda" ||
         info.carMake === "Volkswagen" ||
         info.carMake === "Ferrari" ||
+        info.carMake === "Maserati" ||
         info.carMake === "Alfa-Romeo" ||
         info.carMake === "Porsche" ? (
           <Image

@@ -1,34 +1,79 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
+import { ScrollArea } from "./ui/scroll-area";
 
-const ServicePicker = ({ services, carType }: any) => {
+const ServicePicker = ({
+  services,
+  carType,
+  onComplete,
+  setIsDialogOpen,
+}: any) => {
   //   console.log("this is servies", services);
+  const [selectedService, setSelectedService] = useState(-1);
+  const [pData, setData] = useState({});
+
+  const handleSelect = (
+    index: number,
+    serviceGroupId: string,
+    serviceId: string,
+    serviceName: string
+  ) => {
+    setSelectedService(index);
+    const data = {
+      serviceGroupId,
+      serviceId,
+      serviceName,
+    };
+    setData(data);
+    // onComplete(data, "services");
+  };
   return (
     <div className="flex flex-col gap-2">
-      {services.map((service: any) => {
-        if (service.detail[carType] && "price" in service.detail[carType]) {
-          return (
-            <Button
-              key={service.id}
-              className="flex  justify-between bg-slate-500"
-            >
-              <p className="text-wrap text-left">
-                {" "}
-                {service.serviceName.includes(".")
-                  ? service.serviceName.substring(
-                      service.serviceName.indexOf(" ") + 1
-                    )
-                  : service.serviceName}
-              </p>
-              <p className="font-bold text-dark-blue">
-                ${service.detail[carType].price}
-              </p>
-            </Button>
-          );
-        } else {
-          return "";
-        }
-      })}
+      <ScrollArea className="mt-4 h-[500px] w-full">
+        {services.map((service: any, index: number) => {
+          if (service.detail[carType] && "price" in service.detail[carType]) {
+            return (
+              <Button
+                key={service.id}
+                className={`mb-2  flex w-full justify-between bg-slate-500  ${selectedService === index ? "border-2 border-mclaren-orange" : "border-0"}`}
+                onClick={() =>
+                  handleSelect(
+                    index,
+                    service.serviceGroupId,
+                    service.serviceId,
+                    service.serviceName
+                  )
+                }
+              >
+                <p className="text-wrap text-left">
+                  {" "}
+                  {service.serviceName.includes(".")
+                    ? service.serviceName.substring(
+                        service.serviceName.indexOf(" ") + 1
+                      )
+                    : service.serviceName}
+                </p>
+                <p className="font-bold text-dark-blue">
+                  ${service.detail[carType].price}
+                </p>
+              </Button>
+            );
+          } else {
+            return "";
+          }
+        })}
+      </ScrollArea>
+      <Button
+        onClick={() => {
+          onComplete(pData, "serviceSelected");
+          setIsDialogOpen(false);
+        }}
+        disabled={selectedService === -1}
+        className="mt-2 w-[320px] bg-rolex-green"
+      >
+        Confirm
+      </Button>
     </div>
   );
 };

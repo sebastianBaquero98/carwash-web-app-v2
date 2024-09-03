@@ -102,7 +102,7 @@ const DeleteDialog = ({
         <DialogFooter>
           <Button
             onClick={(e) => handleDelete(e)}
-            className="bg-navy-blue  text-bone-white"
+            className="bg-rolex-green  text-bone-white"
             disabled={!(inputReason.length > 1) || isPending}
           >
             {isPending ? "Deleting..." : "Confirm Delete"}

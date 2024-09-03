@@ -80,7 +80,7 @@ const NavBar = ({ locationName, userRole }: props) => {
         {/* <div className="flex items-center"> */}
         <Button onClick={handleToggle}>
           <p className="primary-text-gradient text-sm">
-            {!isClicked ? "Car Wash Solution" : locationName}
+            {!isClicked ? "Car Wash Solutions" : locationName}
           </p>
         </Button>
         {/* </div> */}

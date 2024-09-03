@@ -13,7 +13,7 @@ const ClientGarage = ({ data, onComplete, cars }: any) => {
       carId,
       carTypeId,
     };
-    onComplete(data, "orderHistory");
+    onComplete(data, "services");
   };
   return (
     <div className="ms-[-15px] mt-1  w-[310px]  items-center rounded-r-[20px] border-[7px] border-light-blue bg-light-blue">
@@ -21,7 +21,7 @@ const ClientGarage = ({ data, onComplete, cars }: any) => {
         <div className="flex justify-between">
           <Popover>
             <PopoverTrigger>
-              <p className=" ms-[45px] text-[17px] font-bold">
+              <p className="ms-[38px] text-[17px] font-bold">
                 {data.clientName.split(" ")[0]}
               </p>
             </PopoverTrigger>
