@@ -2,11 +2,7 @@
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
-
-interface ServiceInfo {
-  serviceName: string;
-  serviceId: string;
-}
+import { Service } from "@/types";
 
 const ExtraServicePicker = ({
   services,
@@ -15,9 +11,13 @@ const ExtraServicePicker = ({
   carType,
 }: any) => {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const [moreInfoSelected, setMoreInfoSelected] = useState<ServiceInfo[]>([]);
+  const [moreInfoSelected, setMoreInfoSelected] = useState<Service[]>([]);
 
-  const handleClick = (serviceId: string, serviceName: string) => {
+  const handleClick = (
+    serviceId: string,
+    serviceName: string,
+    price: number
+  ) => {
     if (selectedServices.includes(serviceId)) {
       // Remove id from array
       setSelectedServices((prevIds) =>
@@ -31,9 +31,10 @@ const ExtraServicePicker = ({
       // Add id to array
       setSelectedServices((prevIds) => [...prevIds, serviceId]);
       // Add new info to moreInfoSelected
-      const newInfo: ServiceInfo = {
+      const newInfo: Service = {
         serviceName,
         serviceId,
+        price,
       };
       setMoreInfoSelected((prevData) => [...prevData, newInfo]);
     }
@@ -49,7 +50,11 @@ const ExtraServicePicker = ({
                 key={service.serviceId}
                 className={`mb-2  flex w-full justify-between bg-slate-500  ${selectedServices.includes(service.serviceId) ? "border-2 border-mclaren-orange" : "border-0"}`}
                 onClick={() =>
-                  handleClick(service.serviceId, service.serviceName)
+                  handleClick(
+                    service.serviceId,
+                    service.serviceName,
+                    service.detail[carType].price
+                  )
                 }
               >
                 <p className="text-wrap text-left ">

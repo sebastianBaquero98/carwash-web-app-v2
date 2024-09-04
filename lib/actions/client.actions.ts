@@ -1,5 +1,39 @@
 "use server";
 
+export async function createClient(
+  accessToken: string,
+  clientName: string,
+  clientPhoneNumber: string,
+  carMake: string,
+  carType: string,
+  carColor: string
+) {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Authorization", "Bearer " + accessToken);
+
+  const raw = JSON.stringify({
+    userInfo: {
+      phoneNumber: clientPhoneNumber,
+      clientName,
+    },
+    carInfo: {
+      carMake,
+      carType,
+      carColor,
+    },
+  });
+
+  const response = await fetch(process.env.NEXT_PUBLIC_ENDPOINTURL + "client", {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  });
+  const result = await response.json();
+  return result;
+}
+
 export async function getClientByPhoneNumber(
   accessToken: string,
   phoneNumber: string

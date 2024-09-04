@@ -5,18 +5,26 @@ import Image from "next/image";
 import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover";
 
 const ClientGarage = ({ data, onComplete, cars }: any) => {
-  const [isSelected, setIsSelected] = useState(-1);
+  const [isSelected, setIsSelected] = useState(cars.length === 1 ? 0 : -1);
 
-  const handleSelect = (index: number, carId: string, carTypeId: string) => {
-    setIsSelected(index);
+  const handleSelect = (
+    index: number,
+    carId: string,
+    carTypeId: string,
+    carTypeName: string
+  ) => {
     const data = {
       carId,
       carTypeId,
+      carTypeName,
     };
-    onComplete(data, "services");
+    onComplete(data);
+    setIsSelected(index);
   };
   return (
-    <div className="ms-[-15px] mt-1  w-[310px]  items-center rounded-r-[20px] border-[7px] border-light-blue bg-light-blue">
+    <div
+      className={`ms-[-15px] mt-1  w-[310px]  items-center rounded-r-[20px] border-[7px] ${isSelected !== -1 ? "border-rolex-green bg-rolex-green" : "border-light-blue bg-light-blue"} `}
+    >
       <div className="ms-1 flex w-[290px] flex-col gap-2 rounded-r-[18px] bg-[#000] py-2">
         <div className="flex justify-between">
           <Popover>
@@ -37,16 +45,29 @@ const ClientGarage = ({ data, onComplete, cars }: any) => {
             </PopoverContent>
           </Popover>
           <div className="me-5 flex gap-2">
-            <div className="size-[22px] rounded-full bg-rolex-green"></div>
-            <div className="size-[22px] rounded-full bg-renualt-yellow"></div>
-            <div className="size-[22px] rounded-full bg-ferrari-red"></div>
+            {/* <div className="size-[22px] rounded-full bg-rolex-green"></div>
+            <div className="size-[22px] rounded-full bg-ferrari-red"></div> */}
+            <Image
+              src="/icons/add_car_icon.svg"
+              width={25}
+              height={25}
+              alt="credit-card-icon"
+            />
+            <Image
+              src="/icons/delete_car_icon.svg"
+              width={25}
+              height={25}
+              alt="credit-card-icon"
+            />
           </div>
         </div>
 
         <ScrollArea className="h-[215px] rounded-md ">
           {cars.map((car: any, index: number) => (
             <button
-              onClick={() => handleSelect(index, car.carId, car.carType)}
+              onClick={() =>
+                handleSelect(index, car.carId, car.carType, car.carTypeName)
+              }
               key={car.carId}
             >
               <div

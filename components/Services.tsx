@@ -15,14 +15,17 @@ const Service = ({ services, orderData, carType, onComplete }: any) => {
 
   return (
     <div className="flex gap-3">
-      <div className="ms-[-15px] mt-1  w-[310px]  items-center rounded-r-[20px] border-[7px] border-light-blue bg-light-blue">
+      <div
+        className={`ms-[-15px] mt-1  w-[310px] items-center rounded-r-[20px] border-[7px] ${orderData.service.serviceGroupId === "" ? "border-light-blue bg-light-blue" : "border-rolex-green bg-rolex-green"} `}
+      >
         <div className="ms-1 flex w-[290px] flex-col gap-2 rounded-r-[18px] bg-[#000] py-2">
-          {orderData.serviceGroupId === "" && orderData.serviceId === "" ? (
+          {orderData.service.serviceGroupId === "" &&
+          orderData.service.serviceId === "" ? (
             <p className="ms-[38px] text-sm">No Service Added</p>
           ) : (
             <div className="flex h-[42px] w-[280px] items-center justify-between rounded-lg bg-white">
               <p className="ms-[40px] text-[15px] font-bold  tracking-[9%] text-dark-blue">
-                {orderData.serviceName}
+                {orderData.service.serviceName}
               </p>
             </div>
           )}

@@ -17,15 +17,17 @@ const ServicePicker = ({
     index: number,
     serviceGroupId: string,
     serviceId: string,
-    serviceName: string
+    serviceName: string,
+    price: number
   ) => {
     setSelectedService(index);
     const data = {
       serviceGroupId,
       serviceId,
       serviceName,
+      price,
     };
-    setData(data);
+    setData({ service: data });
     // onComplete(data, "services");
   };
   return (
@@ -42,7 +44,8 @@ const ServicePicker = ({
                     index,
                     service.serviceGroupId,
                     service.serviceId,
-                    service.serviceName
+                    service.serviceName,
+                    service.detail[carType].price
                   )
                 }
               >

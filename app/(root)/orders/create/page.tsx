@@ -4,7 +4,7 @@ import ClientSearchInput from "@/components/ClientSearchInput";
 import ExtraService from "@/components/ExtraService";
 import Services from "@/components/Services";
 import { Button } from "@/components/ui/button";
-
+import { useOrderContext } from "@/context/OrderContext";
 import { getClientGarage } from "@/lib/actions/client.actions";
 import { getExtraServices, getServices } from "@/lib/actions/services.actions";
 import { useRouter } from "next/navigation";
@@ -14,30 +14,11 @@ import React, { useEffect, useState } from "react";
 export default function CreateOrder() {
   const router = useRouter();
   const { data: session } = useSession();
-  const [step, setStep] = useState("");
+
   const [cars, setCars] = useState([]);
   const [services, setServices] = useState([]);
   const [extraServices, setExtraServices] = useState([]);
-  const [orderData, setOrderData] = useState({
-    clientId: "",
-    locationId: "",
-    comment: "",
-    garageId: "",
-    carId: "",
-    discount: "0",
-    discountType: "NA",
-    orderState: "NS",
-    price: "",
-    extraServices: [],
-    estimatedPickUpTime: "",
-    serviceGroupId: "",
-    serviceId: "",
-    servicename: "",
-    tz: "",
-    clientName: "",
-    clientEmail: "",
-    carTypeId: "",
-  });
+  const { orderData, updateOrderData } = useOrderContext();
 
   let accessToken = "";
   let locationId = "";
@@ -46,34 +27,17 @@ export default function CreateOrder() {
     locationId = session.locationId;
   }
 
-  const updateOrderData = (newData: any, step: string) => {
-    console.log("entro", newData, step);
-    setOrderData((prevData) => ({ ...prevData, ...newData }));
-    setStep(step);
-  };
-
-  const handleClick = () => {
-    // const queryParams = new URLSearchParams(orderData).toString();
-    // router.push(`/order-confirmation?${queryParams}`);
-    // const queryParams = new URLSearchParams();
-    // Object.entries(orderData).forEach(([key, value]) => {
-    //   if (typeof value === "string" || typeof value === "number") {
-    //     queryParams.append(key, value.toString());
-    //   } else if (Array.isArray(value)) {
-    //     queryParams.append(key, JSON.stringify(value));
-    //   } else if (typeof value === "object" && value !== null) {
-    //     queryParams.append(key, JSON.stringify(value));
-    //   }
-    // });
-    // router.push(`/orders/create/detail?${queryParams.toString()}`);
-    // const serializedData = encodeURIComponent(JSON.stringify(orderData));
-    // router.push(`/orders/create/detail?orderData=${serializedData}`);
-    // const queryParams = new URLSearchParams(orderData).toString();
-    // router.push(`/order-confirmation?${queryParams}`);
+  const handleClick = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.push(`/orders/create/detail`);
   };
 
   useEffect(() => {
-    if (step === "clientGarage") {
+    if (
+      orderData.clientName !== "" &&
+      cars.length === 0 &&
+      orderData.garageId !== ""
+    ) {
       setCars([]);
       const fetchCars = async () => {
         const cars = await getClientGarage(accessToken, orderData.garageId);
@@ -91,22 +55,7 @@ export default function CreateOrder() {
       fetchServices();
       fetchExtraServices();
     }
-    // else if (step === "orderHistory") {
-    //   setOrderHistory([]);
-    //   startTransitionHistory(async () => {
-    //     const fetchOrderHistory = async () => {
-    //       const orderHistory = await getClientOrderHistory(
-    //         accessToken,
-    //         orderData.carId,
-    //         orderData.carTypeId,
-    //         orderData.clientId
-    //       );
-    //       setOrderHistory(orderHistory);
-    //     };
-    //     fetchOrderHistory();
-    //   });
-    // }
-  }, [step, orderData.carId]);
+  }, [orderData.clientName, orderData.carId]);
 
   return (
     <div className="flex flex-col">
@@ -149,11 +98,11 @@ export default function CreateOrder() {
         )}
 
         <p
-          className={`ms-[35px] mt-5 text-[16px] font-extralight tracking-[9%] ${extraServices.length > 0 && orderData.serviceId !== "" ? "" : "opacity-30"}`}
+          className={`ms-[35px] mt-5 text-[16px] font-extralight tracking-[9%] ${extraServices.length > 0 && orderData.service.serviceId !== "" ? "" : "opacity-30"}`}
         >
           Extra Services
         </p>
-        {extraServices.length > 0 && orderData.serviceId !== "" && (
+        {extraServices.length > 0 && orderData.service.serviceId !== "" && (
           <ExtraService
             services={extraServices}
             orderData={orderData}

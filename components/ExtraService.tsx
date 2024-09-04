@@ -15,7 +15,9 @@ const ExtraService = ({ services, orderData, onComplete, carType }: any) => {
 
   return (
     <div className="flex gap-3">
-      <div className="ms-[-15px] mt-1  w-[310px]  items-center rounded-r-[20px] border-[7px] border-light-blue bg-light-blue">
+      <div
+        className={`ms-[-15px] mt-1  w-[310px] items-center rounded-r-[20px] border-[7px] ${orderData.extraServices.length === 0 ? "border-light-blue bg-light-blue" : "border-rolex-green bg-rolex-green"} `}
+      >
         <div className="ms-1 flex w-[290px] flex-col gap-2 rounded-r-[18px] bg-[#000] py-2">
           {orderData.extraServices.length === 0 ? (
             <p className="ms-[38px] text-sm">No Extra Service Added</p>

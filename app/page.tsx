@@ -6,7 +6,7 @@ import Image from "next/image";
 
 const Page = () => {
   return (
-    <div className="mt-[300px] flex size-full items-center justify-center">
+    <div className="flex h-screen items-center justify-center">
       <div className="flex flex-col items-center justify-center gap-1">
         Welcome to{" "}
         <div className="flex">
