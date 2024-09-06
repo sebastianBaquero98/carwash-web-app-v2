@@ -35,7 +35,7 @@ const ExtraService = ({ services, orderData, onComplete, carType }: any) => {
           )}
         </div>
       </div>
-      <Dialog open={isDialogOpen}>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger>
           <Button
             onClick={() => setIsDialogOpen(true)}

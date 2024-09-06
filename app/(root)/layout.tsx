@@ -1,5 +1,4 @@
 import React from "react";
-
 import Provider from "@/context/Provider";
 import NavBar from "@/components/NavBar";
 import { getServerSession } from "next-auth";

@@ -3,27 +3,56 @@ import React, { useState } from "react";
 import { ScrollArea } from "./ui/scroll-area";
 import Image from "next/image";
 import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover";
+import { Button } from "./ui/button";
+import { deleteCarFromGarage } from "@/lib/actions/client.actions";
+import { useToast } from "@/hooks/use-toast";
 
-const ClientGarage = ({ data, onComplete, cars }: any) => {
+const ClientGarage = ({ accessToken, data, onComplete, cars }: any) => {
+  const { toast } = useToast();
+
+  const [stateCars, setStateCars] = useState(cars);
   const [isSelected, setIsSelected] = useState(cars.length === 1 ? 0 : -1);
+  const [isDelete, setIsDelete] = useState(false);
+  const [deleteId, setDeleteId] = useState("");
+  const [deleteCarId, setDeleteCarId] = useState("");
+  // const [selectedDelete, setSelectedDelete] = useState(-1);
 
   const handleSelect = (
     index: number,
     carId: string,
     carTypeId: string,
-    carTypeName: string
+    carTypeName: string,
+    id: string
   ) => {
-    const data = {
-      carId,
-      carTypeId,
-      carTypeName,
-    };
-    onComplete(data);
-    setIsSelected(index);
+    if (!isDelete) {
+      const data = {
+        carId,
+        carTypeId,
+        carTypeName,
+      };
+      onComplete(data);
+      setIsSelected(index);
+    } else {
+      setDeleteCarId(carId);
+      setDeleteId(id);
+      setIsSelected(index);
+    }
+  };
+
+  const handleDelete = async () => {
+    const updatedItems = stateCars.filter((_: any, i: any) => i !== isSelected);
+    setStateCars(updatedItems);
+    setIsDelete(false);
+    setIsSelected(-1);
+    await deleteCarFromGarage(accessToken, deleteId, deleteCarId);
+    toast({
+      title: "DELETE CONFIRMED",
+      description: "Deleted car from clients car garage",
+    });
   };
   return (
     <div
-      className={`ms-[-15px] mt-1  w-[310px]  items-center rounded-r-[20px] border-[7px] ${isSelected !== -1 ? "border-rolex-green bg-rolex-green" : "border-light-blue bg-light-blue"} `}
+      className={`ms-[-15px] mt-1  w-[310px]  items-center rounded-r-[20px] border-[7px] ${isSelected !== -1 && !isDelete ? "border-rolex-green bg-rolex-green" : !isDelete ? "border-light-blue bg-light-blue" : "border-ferrari-red bg-ferrari-red"} `}
     >
       <div className="ms-1 flex w-[290px] flex-col gap-2 rounded-r-[18px] bg-[#000] py-2">
         <div className="flex justify-between">
@@ -45,28 +74,47 @@ const ClientGarage = ({ data, onComplete, cars }: any) => {
             </PopoverContent>
           </Popover>
           <div className="me-5 flex gap-2">
-            {/* <div className="size-[22px] rounded-full bg-rolex-green"></div>
-            <div className="size-[22px] rounded-full bg-ferrari-red"></div> */}
-            <Image
-              src="/icons/add_car_icon.svg"
-              width={25}
-              height={25}
-              alt="credit-card-icon"
-            />
-            <Image
-              src="/icons/delete_car_icon.svg"
-              width={25}
-              height={25}
-              alt="credit-card-icon"
-            />
+            {!isDelete && (
+              <Image
+                src="/icons/add_car_icon.svg"
+                width={25}
+                height={25}
+                alt="credit-card-icon"
+              />
+            )}
+            {!isDelete && (
+              <Image
+                src="/icons/delete_car_icon.svg"
+                width={25}
+                height={25}
+                alt="credit-card-icon"
+                onClick={() => setIsDelete(true)}
+              />
+            )}
+
+            {isDelete && (
+              <Button
+                onClick={handleDelete}
+                disabled={isSelected === -1 || cars.length === 1}
+                className="ms-6 h-[30px] w-[120px] bg-ferrari-red text-[12px]"
+              >
+                Confirm Delete
+              </Button>
+            )}
           </div>
         </div>
 
         <ScrollArea className="h-[215px] rounded-md ">
-          {cars.map((car: any, index: number) => (
+          {stateCars.map((car: any, index: number) => (
             <button
               onClick={() =>
-                handleSelect(index, car.carId, car.carType, car.carTypeName)
+                handleSelect(
+                  index,
+                  car.carId,
+                  car.carType,
+                  car.carTypeName,
+                  car.id
+                )
               }
               key={car.carId}
             >

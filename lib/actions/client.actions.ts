@@ -98,3 +98,21 @@ export async function getClientOrderHistory(
   const result = await response.json();
   return result;
 }
+
+export async function deleteCarFromGarage(
+  accessToken: string,
+  pId: string,
+  pCarId: string
+) {
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", "Bearer " + accessToken);
+
+  await fetch(
+    process.env.NEXT_PUBLIC_ENDPOINTURL + `car?id=${pId}&carId=${pCarId}`,
+    {
+      method: "PUT",
+      headers: myHeaders,
+      redirect: "follow",
+    }
+  );
+}

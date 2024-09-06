@@ -63,7 +63,7 @@ const NavBar = ({ locationName, userRole }: props) => {
           <Image src="/icons/app-icon.jpg" width={25} height={25} alt="icon" />
 
           <p className="primary-text-gradient ms-2 text-sm">
-            Car Wash Solutions
+            My Wash Solutions
           </p>
         </div>
 
@@ -80,7 +80,7 @@ const NavBar = ({ locationName, userRole }: props) => {
         {/* <div className="flex items-center"> */}
         <Button onClick={handleToggle}>
           <p className="primary-text-gradient text-sm">
-            {!isClicked ? "Car Wash Solutions" : locationName}
+            {!isClicked ? "My Wash Solutions" : locationName}
           </p>
         </Button>
         {/* </div> */}

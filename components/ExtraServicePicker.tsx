@@ -16,7 +16,7 @@ const ExtraServicePicker = ({
   const handleClick = (
     serviceId: string,
     serviceName: string,
-    price: number
+    price: string
   ) => {
     if (selectedServices.includes(serviceId)) {
       // Remove id from array

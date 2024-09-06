@@ -76,6 +76,7 @@ export default function CreateOrder() {
         </p>
         {cars.length > 0 && (
           <ClientGarage
+            accessToken={accessToken}
             data={orderData}
             onComplete={updateOrderData}
             cars={cars}
@@ -113,7 +114,7 @@ export default function CreateOrder() {
       </div>
       <div className=" my-5 flex items-center justify-center">
         <Button
-          disabled={orderData.extraServices.length === 0}
+          disabled={orderData.service.serviceName === ""}
           className="w-[300px] rounded-lg border-8 border-rolex-green"
           onClick={handleClick}
         >

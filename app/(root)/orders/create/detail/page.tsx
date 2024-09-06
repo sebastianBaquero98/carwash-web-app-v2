@@ -9,6 +9,7 @@ import { useOrderContext } from "@/context/OrderContext";
 const OrderDetail = () => {
   const { orderData, updateOrderData } = useOrderContext();
   const [selectedDiscount, setIsSelectedDiscount] = useState("");
+  const [isEdit, setIsEdit] = useState(false);
   const [discount, setDiscount] = useState(0);
   const [comment, setComment] = useState("");
   const [price, setPrice] = useState(
@@ -18,7 +19,7 @@ const OrderDetail = () => {
         0
       )
   );
-  console.log(orderData);
+  // console.log(orderData);
   // useEffect(() => {
   //   if (selectedDiscount === "FIXED") {
   //     setPrice((prevValue) => prevValue - discount);
@@ -80,24 +81,48 @@ const OrderDetail = () => {
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       <h1 className="mb-1 text-[17px]">Order Detail</h1>
-      <div className="flex w-[323px] flex-col items-center justify-center gap-2 rounded-[20px] border-8 border-light-blue p-2">
+      <div
+        className={`flex w-[323px] flex-col items-center justify-center gap-2 rounded-[20px] border-8 ${isEdit ? "border-mclaren-orange" : "border-light-blue"} p-2`}
+      >
         <div className="flex h-[82px] w-[285px] justify-between rounded-[10px] bg-[#F4F5F9] px-4">
           <div className="flex h-full flex-col justify-center">
-            <p className=" text-[17px] font-bold text-dark-blue ">
-              {orderData.clientName}
-            </p>
-            <p className="text-[10px] text-dark-blue">
-              {orderData.clientEmail}
-            </p>
-            <p className="text-[10px] text-dark-blue">
-              {orderData.clientPhoneNumber}
-            </p>
+            {isEdit ? (
+              <Input
+                className="mb-1 h-[25px] w-[140px] bg-[#DEE2E9] text-dark-blue"
+                value={orderData.clientName}
+              ></Input>
+            ) : (
+              <p className=" text-[17px] font-bold text-dark-blue ">
+                {orderData.clientName}
+              </p>
+            )}
+            {isEdit ? (
+              <Input
+                value={orderData.clientEmail}
+                className="mb-1 h-[20px] w-[220px]  bg-[#DEE2E9] text-[10px] text-dark-blue"
+              ></Input>
+            ) : (
+              <p className="text-[10px] text-dark-blue">
+                {orderData.clientEmail}
+              </p>
+            )}
+            {isEdit ? (
+              <Input
+                value={orderData.clientPhoneNumber}
+                className="h-[20px]  w-[160px] bg-[#DEE2E9] text-[10px] text-dark-blue"
+              ></Input>
+            ) : (
+              <p className="text-[10px] text-dark-blue">
+                {orderData.clientPhoneNumber}
+              </p>
+            )}
           </div>
           <Image
             src="/icons/edit_client_icon.svg"
             width={25}
             height={25}
             alt="credit-card-icon"
+            onClick={() => setIsEdit(true)}
           />
         </div>
         <div className="flex  w-[285px] flex-col items-center rounded-[10px] bg-[#F4F5F9] py-2">

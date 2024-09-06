@@ -11,7 +11,7 @@ const Page = () => {
         Welcome to{" "}
         <div className="flex">
           <Image src="/icons/app-icon.jpg" width={25} height={25} alt="icon" />
-          <p className="primary-text-gradient ms-2">Car Wash Solutions</p>
+          <p className="primary-text-gradient ms-2">My Wash Solutions</p>
         </div>
         <Button
           className="mt-2 border-2 border-white bg-[#000] text-bone-white"

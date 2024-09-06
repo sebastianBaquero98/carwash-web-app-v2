@@ -6,7 +6,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "./ui/input";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 import { carColorsOptions, carMakeOptions, carTypes } from "@/constants";
@@ -20,6 +20,7 @@ import {
   DropdownMenuItem,
 } from "@radix-ui/react-dropdown-menu";
 import { createClient } from "@/lib/actions/client.actions";
+import { useToast } from "@/hooks/use-toast";
 
 const CreateClient = ({
   phoneNumber,
@@ -27,6 +28,7 @@ const CreateClient = ({
   accessToken,
   setDoesClientExist,
 }: any) => {
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [selectedCarMake, setSelectedCarMake] = useState({
     value: "",
@@ -42,6 +44,14 @@ const CreateClient = ({
   });
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
+  const [isEmailCorrect, setIsEmailCorrect] = useState(true);
+
+  useEffect(() => {
+    const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
+    if (clientEmail !== "") {
+      setIsEmailCorrect(emailRegex.test(clientEmail));
+    }
+  }, [clientEmail]);
 
   const handleSubmit = async () => {
     // Send Submit
@@ -53,7 +63,10 @@ const CreateClient = ({
       selectedCarType.value,
       selectedCarColor.value
     );
-    console.log("this is client,", client);
+    toast({
+      title: "Client Created Successfully",
+    });
+    // console.log("this is client,", client);
     const data = {
       clientName,
       clientEmail,
@@ -96,8 +109,12 @@ const CreateClient = ({
         <Input
           className="bg-[#DEE2E9] text-dark-blue"
           placeholder="Client Email"
+          type="email"
           onChange={(e) => setClientEmail(e.target.value)}
         />
+        {!isEmailCorrect && (
+          <p className="text-[13px] text-ferrari-red">Enter a valid email</p>
+        )}
 
         <div className="flex justify-between">
           <DropdownMenu>
@@ -211,7 +228,8 @@ const CreateClient = ({
             selectedCarColor.label === "" ||
             selectedCarType.label === "" ||
             clientName === "" ||
-            clientEmail === ""
+            clientEmail === "" ||
+            !isEmailCorrect
           }
           className="rounded-lg bg-rolex-green text-white"
         >

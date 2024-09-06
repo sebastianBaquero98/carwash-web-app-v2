@@ -4,8 +4,10 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import React, { useEffect, useState, useTransition } from "react";
 import CreateClient from "./CreateClient";
+import { useToast } from "@/hooks/use-toast";
 
 const ClientSearchInput = ({ onComplete, accessToken }: any) => {
+  const { toast } = useToast();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isPending, startTransition] = useTransition();
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
@@ -13,7 +15,7 @@ const ClientSearchInput = ({ onComplete, accessToken }: any) => {
   const [isSentSubmit, setIsSentSubmit] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    // e.preventDefault();
     startTransition(async () => {
       const client = await getClientByPhoneNumber(accessToken, phoneNumber);
       setIsSentSubmit(true);
@@ -31,6 +33,10 @@ const ClientSearchInput = ({ onComplete, accessToken }: any) => {
       } else {
         // Client does no exist
         setDoesClientExist(false);
+        toast({
+          title: "Client does not exist",
+          description: "Please create the client",
+        });
       }
     });
   };
@@ -38,6 +44,7 @@ const ClientSearchInput = ({ onComplete, accessToken }: any) => {
   const handleInputPhoneNumber = (e: any) => {
     setIsSentSubmit(false);
     setDoesClientExist(true);
+
     setPhoneNumber(e.target.value);
   };
 
