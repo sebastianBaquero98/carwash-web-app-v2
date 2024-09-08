@@ -1,7 +1,5 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import router from "next/router";
-import { type } from "os";
 
 const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 interface paramsUpdateLocationMetrics {
@@ -259,4 +257,31 @@ export async function updateLocationMetricsDelete(
     });
   }
   revalidatePath("/orders");
+}
+
+export async function updateLocationMetricsCreate(
+  accessToken: string,
+  locationId: string,
+  date: string,
+  price: number,
+  clientId: string
+) {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Authorization", "Bearer " + accessToken);
+
+  const raw = JSON.stringify({
+    id: locationId,
+    date,
+    type: "orderCreation",
+    value: price,
+    clientId,
+  });
+
+  await fetch(process.env.NEXT_PUBLIC_ENDPOINTURL + "location-metrics", {
+    method: "PUT",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  });
 }

@@ -29,6 +29,8 @@ export default function CreateOrder() {
 
   const handleClick = (e: React.FormEvent) => {
     e.preventDefault();
+    updateOrderData({ accessToken, locationId });
+
     router.push(`/orders/create/detail`);
   };
 

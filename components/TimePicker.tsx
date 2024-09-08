@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { Minus, Plus } from "lucide-react";
-// import { Bar, BarChart, ResponsiveContainer } from "recharts";
+import React, { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,49 +12,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
-// const data = [
-//   {
-//     goal: 400,
-//   },
-//   {
-//     goal: 300,
-//   },
-//   {
-//     goal: 200,
-//   },
-//   {
-//     goal: 300,
-//   },
-//   {
-//     goal: 200,
-//   },
-//   {
-//     goal: 278,
-//   },
-//   {
-//     goal: 189,
-//   },
-//   {
-//     goal: 239,
-//   },
-//   {
-//     goal: 300,
-//   },
-//   {
-//     goal: 200,
-//   },
-//   {
-//     goal: 278,
-//   },
-//   {
-//     goal: 189,
-//   },
-//   {
-//     goal: 349,
-//   },
-// ];
-
-const TimePicker = () => {
+const TimePicker = ({ setEstimatedPickUpTime }: any) => {
   const [hour, setHour] = useState(-1);
   const [minutes, setMinutes] = useState(-1);
   const [timeDay, setTimeDay] = useState("");
@@ -200,7 +156,12 @@ const TimePicker = () => {
           </div>
           <DrawerFooter>
             <DrawerClose asChild>
-              <Button variant="outline">Submit</Button>
+              <Button
+                onClick={() => setEstimatedPickUpTime(`${time} ${timeDay}`)}
+                variant="outline"
+              >
+                Submit
+              </Button>
             </DrawerClose>
           </DrawerFooter>
         </div>

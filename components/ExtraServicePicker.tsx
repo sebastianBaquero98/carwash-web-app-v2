@@ -77,10 +77,7 @@ const ExtraServicePicker = ({
       </ScrollArea>
       <Button
         onClick={() => {
-          onComplete(
-            { extraServices: moreInfoSelected },
-            "extraServiceSelected"
-          );
+          onComplete({ extraServices: moreInfoSelected });
           setIsDialogOpen(false);
         }}
         disabled={selectedServices.length < 1}

@@ -5,11 +5,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useOrderContext } from "@/context/OrderContext";
+import { useRouter } from "next/navigation";
 import { editClient } from "@/lib/actions/client.actions";
 import TimePicker from "@/components/TimePicker";
+import { createOrder } from "@/lib/actions/order.actions";
+import { convertTo24HourFormat, getFormattedDate } from "@/lib/utils";
+import { updateLocationMetricsCreate } from "@/lib/actions/location-metrics.action";
+import { Service } from "@/types";
 
 const OrderDetail = () => {
   const { orderData, updateOrderData } = useOrderContext();
+  const router = useRouter();
 
   const [selectedDiscount, setIsSelectedDiscount] = useState("");
   const [isEdit, setIsEdit] = useState(false);
@@ -17,6 +23,7 @@ const OrderDetail = () => {
   const [comment, setComment] = useState("");
   const [clientName, setClientName] = useState(orderData.clientName);
   const [clientEmail, setClientEmail] = useState(orderData.clientEmail);
+  const [estimatedPickUptime, setEstimatedPickUpTime] = useState("");
   const [price, setPrice] = useState(
     parseFloat(orderData.service.price) +
       orderData.extraServices.reduce(
@@ -24,14 +31,6 @@ const OrderDetail = () => {
         0
       )
   );
-  // console.log(orderData);
-  // useEffect(() => {
-  //   if (selectedDiscount === "FIXED") {
-  //     setPrice((prevValue) => prevValue - discount);
-  //   } else if (selectedDiscount === "PERCENTAGE") {
-  //     setPrice((prevValue) => prevValue - prevValue * (discount / 100));
-  //   }
-  // }, [selectedDiscount, discount]);
 
   useEffect(() => {
     let dis = 0;
@@ -71,9 +70,38 @@ const OrderDetail = () => {
     );
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    const orderDataWithExtras = {
+      ...orderData,
+      extraServicesIds: orderData.extraServices.map(
+        (item: Service) => item.serviceId
+      ),
+    };
+    // console.log(orderDataWithExtras);
+    const formatedTime = convertTo24HourFormat(estimatedPickUptime);
+
+    await createOrder(
+      orderDataWithExtras,
+      comment,
+      formatedTime,
+      selectedDiscount,
+      discount,
+      price
+    );
+    const todayDate = getFormattedDate();
+
+    await updateLocationMetricsCreate(
+      orderData.accessToken,
+      orderData.locationId,
+      todayDate,
+      price,
+      orderData.clientId
+    );
+
     // Clear the order data
     updateOrderData({
+      accessToken: "",
+      clientLastServed: "",
       clientId: "",
       locationId: "",
       comment: "",
@@ -93,10 +121,11 @@ const OrderDetail = () => {
       service: {
         serviceName: "",
         serviceId: "",
-        price: 0,
+        price: "0",
         serviceGroupId: "",
       },
     });
+    router.push(`/orders`);
   };
 
   return (
@@ -170,7 +199,7 @@ const OrderDetail = () => {
             </p>
           ))}
 
-          <TimePicker />
+          <TimePicker setEstimatedPickUpTime={setEstimatedPickUpTime} />
           {/* <Input
             placeholder="Pick up Time"
             className="mt-3 h-[28px] w-[104px] border-dark-blue bg-[#DEE2E9] text-center align-middle text-dark-blue placeholder:text-[9px] placeholder:text-dark-blue focus:outline-none  focus:ring-2 focus:ring-blue-300"
@@ -197,7 +226,7 @@ const OrderDetail = () => {
           </div>
           <Textarea
             onChange={(e) => setComment(e.target.value)}
-            className="mt-3 h-[59px] w-[255px] rounded-[10px] border-dark-blue bg-[#DEE2E9] text-dark-blue placeholder:text-[10px] placeholder:text-dark-blue"
+            className="mt-3 h-[59px] w-[255px] rounded-[10px] border-dark-blue bg-[#DEE2E9] text-[12px] text-dark-blue placeholder:text-[10px] placeholder:text-dark-blue"
             placeholder="Add Comment"
           />
         </div>

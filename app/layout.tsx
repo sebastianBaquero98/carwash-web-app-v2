@@ -32,16 +32,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
-      </head>
-      <Provider>
-        <body className={`${myFont.variable} font-sans`}>{children}</body>
-      </Provider>
+    <html lang="en" className={myFont.variable}>
+      <body className="font-sans">
+        <Provider>{children}</Provider>
+      </body>
     </html>
   );
 }

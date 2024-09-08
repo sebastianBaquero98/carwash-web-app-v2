@@ -22,6 +22,7 @@ export interface OrderData {
   orderState: string;
   service: Service;
   extraServices: Service[];
+  extraServicesIds: string[];
   estimatedPickUpTime: string;
   tz: string;
   clientName: string;
@@ -29,4 +30,5 @@ export interface OrderData {
   carTypeId: string;
   carTypeName: string;
   clientLastServed: string;
+  accessToken: string;
 }

@@ -1,6 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { getFormattedDate } from "../utils";
+import { OrderData } from "@/types";
 
 const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 
@@ -201,4 +202,47 @@ export async function deleteOrder(
     console.error("Error deleting order:", error);
     throw error; // Re-throw the error if you want calling code to handle it
   }
+}
+
+export async function createOrder(
+  orderData: OrderData,
+  comment: string,
+  estimatedPickUpTime: string,
+  discountType: string,
+  discountAmount: number,
+  price: number
+) {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Authorization", "Bearer " + orderData.accessToken);
+
+  const rawData: any = {
+    clientId: orderData.clientId,
+    locationId: orderData.locationId,
+    comment,
+    garageId: orderData.garageId,
+    carId: orderData.carId,
+    discount: discountAmount,
+    discountType,
+    orderState: "NS",
+    price: price.toString(),
+    estimatedPickUpTime,
+    serviceGroupId: orderData.service.serviceGroupId,
+    serviceId: orderData.service.serviceId,
+    tz: timeZone,
+  };
+
+  if (orderData.extraServices.length > 0) {
+    rawData.extraServices = orderData.extraServicesIds;
+  }
+
+  const raw = JSON.stringify(rawData);
+  // console.log(rawData);
+
+  await fetch(process.env.NEXT_PUBLIC_ENDPOINTURL + "order", {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  });
 }

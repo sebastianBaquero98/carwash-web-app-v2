@@ -27,6 +27,7 @@ interface props {
     totalTips: number;
     progress: number;
     position: number;
+    averageTicket: string;
   };
   date: string;
 }
@@ -40,8 +41,10 @@ const LocationMetrics = ({ info, date }: props) => {
           <p className="mt-[-5px] text-[12px] text-[#F4F5F980]">Total Sales</p>
         </div>
         <div className="flex flex-col items-center">
-          <h3 className="text-[35px] font-bold">$80,000</h3>
-          <p className="mt-[-5px] text-[12px] text-[#F4F5F980]">Monthly Goal</p>
+          <h3 className="text-[35px] font-bold">${info.averageTicket}</h3>
+          <p className="mt-[-5px] text-[12px] text-[#F4F5F980]">
+            Average Ticket
+          </p>
         </div>
       </div>
       <div className="mt-5 flex w-full items-center justify-center gap-5">
