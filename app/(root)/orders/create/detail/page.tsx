@@ -5,13 +5,18 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useOrderContext } from "@/context/OrderContext";
+import { editClient } from "@/lib/actions/client.actions";
+import TimePicker from "@/components/TimePicker";
 
 const OrderDetail = () => {
   const { orderData, updateOrderData } = useOrderContext();
+
   const [selectedDiscount, setIsSelectedDiscount] = useState("");
   const [isEdit, setIsEdit] = useState(false);
   const [discount, setDiscount] = useState(0);
   const [comment, setComment] = useState("");
+  const [clientName, setClientName] = useState(orderData.clientName);
+  const [clientEmail, setClientEmail] = useState(orderData.clientEmail);
   const [price, setPrice] = useState(
     parseFloat(orderData.service.price) +
       orderData.extraServices.reduce(
@@ -55,6 +60,17 @@ const OrderDetail = () => {
     orderData.extraServices,
   ]);
 
+  const handleConfirmEdit = async () => {
+    // Update Client
+    setIsEdit(false);
+    await editClient(
+      orderData.clientId,
+      clientName,
+      orderData.clientLastServed,
+      clientEmail
+    );
+  };
+
   const handleConfirm = () => {
     // Clear the order data
     updateOrderData({
@@ -74,7 +90,12 @@ const OrderDetail = () => {
       carTypeId: "",
       clientPhoneNumber: "",
       carTypeName: "",
-      service: { serviceName: "", serviceId: "", price: 0, serviceGroupId: "" },
+      service: {
+        serviceName: "",
+        serviceId: "",
+        price: 0,
+        serviceGroupId: "",
+      },
     });
   };
 
@@ -88,42 +109,46 @@ const OrderDetail = () => {
           <div className="flex h-full flex-col justify-center">
             {isEdit ? (
               <Input
+                onChange={(e) => setClientName(e.target.value)}
                 className="mb-1 h-[25px] w-[140px] bg-[#DEE2E9] text-dark-blue"
-                value={orderData.clientName}
+                value={clientName}
               ></Input>
             ) : (
               <p className=" text-[17px] font-bold text-dark-blue ">
-                {orderData.clientName}
+                {clientName}
               </p>
             )}
             {isEdit ? (
               <Input
-                value={orderData.clientEmail}
+                onChange={(e) => setClientEmail(e.target.value)}
+                value={clientEmail}
                 className="mb-1 h-[20px] w-[220px]  bg-[#DEE2E9] text-[10px] text-dark-blue"
               ></Input>
             ) : (
-              <p className="text-[10px] text-dark-blue">
-                {orderData.clientEmail}
-              </p>
+              <p className="text-[10px] text-dark-blue">{clientEmail}</p>
             )}
-            {isEdit ? (
-              <Input
-                value={orderData.clientPhoneNumber}
-                className="h-[20px]  w-[160px] bg-[#DEE2E9] text-[10px] text-dark-blue"
-              ></Input>
-            ) : (
-              <p className="text-[10px] text-dark-blue">
-                {orderData.clientPhoneNumber}
-              </p>
-            )}
+
+            <p className="text-[10px] text-dark-blue">
+              {orderData.clientPhoneNumber}
+            </p>
           </div>
-          <Image
-            src="/icons/edit_client_icon.svg"
-            width={25}
-            height={25}
-            alt="credit-card-icon"
-            onClick={() => setIsEdit(true)}
-          />
+          {!isEdit ? (
+            <Image
+              src="/icons/edit_client_icon.svg"
+              width={25}
+              height={25}
+              alt="credit-card-icon"
+              onClick={() => setIsEdit(true)}
+            />
+          ) : (
+            <Image
+              src="/icons/green_check.svg"
+              width={25}
+              height={25}
+              alt="credit-card-icon"
+              onClick={handleConfirmEdit}
+            />
+          )}
         </div>
         <div className="flex  w-[285px] flex-col items-center rounded-[10px] bg-[#F4F5F9] py-2">
           <h2 className="text-[25px] font-black text-dark-blue">${price}</h2>
@@ -145,11 +170,11 @@ const OrderDetail = () => {
             </p>
           ))}
 
-          {/* <p className="h-[20px] w-[104px] bg-[#DEE2E9]">r</p> */}
-          <Input
+          <TimePicker />
+          {/* <Input
             placeholder="Pick up Time"
             className="mt-3 h-[28px] w-[104px] border-dark-blue bg-[#DEE2E9] text-center align-middle text-dark-blue placeholder:text-[9px] placeholder:text-dark-blue focus:outline-none  focus:ring-2 focus:ring-blue-300"
-          />
+          /> */}
           <div className="mt-3 flex justify-center gap-1">
             <Button
               onClick={() => setIsSelectedDiscount("FIXED")}
@@ -171,6 +196,7 @@ const OrderDetail = () => {
             />
           </div>
           <Textarea
+            onChange={(e) => setComment(e.target.value)}
             className="mt-3 h-[59px] w-[255px] rounded-[10px] border-dark-blue bg-[#DEE2E9] text-dark-blue placeholder:text-[10px] placeholder:text-dark-blue"
             placeholder="Add Comment"
           />

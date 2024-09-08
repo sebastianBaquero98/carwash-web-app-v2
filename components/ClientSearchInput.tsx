@@ -27,6 +27,7 @@ const ClientSearchInput = ({ onComplete, accessToken }: any) => {
           clientId: client.clientId,
           garageId: client.garageId,
           clientPhoneNumber: phoneNumber,
+          clientLastServed: client.lastServed,
         };
         onComplete(data, "clientGarage");
         // router.push(`/orders/create?garageId=${client.garageId}`);

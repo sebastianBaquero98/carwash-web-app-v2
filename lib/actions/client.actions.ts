@@ -116,3 +116,19 @@ export async function deleteCarFromGarage(
     }
   );
 }
+
+export async function editClient(
+  clientId: string,
+  clientName: string,
+  lastServed: string,
+  clientEmail: string
+) {
+  await fetch(
+    process.env.NEXT_PUBLIC_ENDPOINTURL +
+      `client?clientId=${clientId}&clientName=${clientName}&lastServed=${lastServed}&clientEmail=${clientEmail}`,
+    {
+      method: "PUT",
+      redirect: "follow",
+    }
+  );
+}

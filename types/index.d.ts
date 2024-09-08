@@ -28,4 +28,5 @@ export interface OrderData {
   clientEmail: string;
   carTypeId: string;
   carTypeName: string;
+  clientLastServed: string;
 }

@@ -24,6 +24,7 @@ const defaultOrderData: OrderData = {
   clientPhoneNumber: "",
   carTypeName: "",
   service: { serviceName: "", serviceId: "", price: "", serviceGroupId: "" },
+  clientLastServed: "",
 };
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
