@@ -58,7 +58,7 @@ const ClientGarage = ({ accessToken, data, onComplete, cars }: any) => {
         <div className="flex justify-between">
           <Popover>
             <PopoverTrigger>
-              <p className="ms-[38px] text-[17px] font-bold">
+              <p className="ms-[38px] text-[17px] font-medium">
                 {data.clientName.split(" ")[0]}
               </p>
             </PopoverTrigger>
@@ -132,11 +132,11 @@ const ClientGarage = ({ accessToken, data, onComplete, cars }: any) => {
                   style={{ backgroundColor: car.carColor }}
                   className="mx-3 inline-block h-full min-h-[1em] w-[15px] rounded-2xl border-2 border-light-blue"
                 ></div>
-                <div className="flex flex-col justify-center text-dark-blue">
-                  <p className="text-[15px] font-bold tracking-[9%]">
+                <div className="flex flex-col items-start justify-center text-dark-blue">
+                  <p className="text-[15px] font-medium tracking-[9%]">
                     {car.carMake}
                   </p>
-                  <p className="text-[16px]">{car.carTypeName}</p>
+                  <p className="text-[13px]">{car.carTypeName}</p>
                 </div>
               </div>
             </button>

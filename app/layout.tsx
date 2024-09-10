@@ -24,6 +24,8 @@ const myFont = localFont({
     },
   ],
   variable: "--font-f1",
+  display: "swap",
+  preload: true,
 });
 
 export default function RootLayout({
@@ -32,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={myFont.variable}>
+    <html lang="en" className={`${myFont.variable} font-sans`}>
       <body className="font-sans">
         <Provider>{children}</Provider>
       </body>

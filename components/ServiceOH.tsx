@@ -3,7 +3,7 @@ import React from "react";
 const ServiceOH = ({ order }: any) => {
   return (
     <div className="flex h-[42px] w-[280px] items-center justify-between rounded-lg bg-white">
-      <p className="ms-[40px] text-[15px] font-bold  tracking-[9%] text-dark-blue">
+      <p className="ms-[40px] text-[15px] font-medium  tracking-[9%] text-dark-blue">
         {order.serviceName.includes(".")
           ? order.serviceName.split(".")[1]
           : order.serviceName}

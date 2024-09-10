@@ -65,7 +65,7 @@ const ExtraServicePicker = ({
                       )
                     : service.serviceName}
                 </p>
-                <p className="font-bold text-dark-blue">
+                <p className="font-medium text-dark-blue">
                   ${service.detail[carType].price}
                 </p>
               </Button>

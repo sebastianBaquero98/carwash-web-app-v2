@@ -67,7 +67,7 @@ const TimePicker = ({ setEstimatedPickUpTime }: any) => {
                 <span className="sr-only">Decrease</span>
               </Button> */}
               <div className="flex flex-col items-center text-center">
-                <div className="flex items-end justify-center text-7xl font-bold tracking-tighter">
+                <div className="flex items-end justify-center text-7xl font-medium tracking-tighter">
                   <p>{time}</p>
                   <p className="text-[13px] tracking-normal text-mclaren-orange">
                     {timeDay}
@@ -157,6 +157,7 @@ const TimePicker = ({ setEstimatedPickUpTime }: any) => {
           <DrawerFooter>
             <DrawerClose asChild>
               <Button
+                disabled={hour === -1 || minutes === -1 || timeDay === ""}
                 onClick={() => setEstimatedPickUpTime(`${time} ${timeDay}`)}
                 variant="outline"
               >

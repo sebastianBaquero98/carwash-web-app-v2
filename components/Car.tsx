@@ -16,8 +16,8 @@ const Car = ({ car }: any) => {
         style={{ backgroundColor: car.carColor }}
         className="mx-3 inline-block h-full min-h-[1em] w-[15px] rounded-2xl border-2 border-light-blue"
       ></div>
-      <div className="flex flex-col justify-center text-dark-blue">
-        <p className="text-[15px] font-bold tracking-[9%]">{car.carMake}</p>
+      <div className="flex flex-col justify-start text-dark-blue">
+        <p className="text-[15px] font-medium tracking-[9%]">{car.carMake}</p>
         <p className="text-[16px]">{car.carTypeName}</p>
       </div>
     </div>

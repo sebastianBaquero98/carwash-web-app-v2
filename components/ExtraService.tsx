@@ -27,7 +27,7 @@ const ExtraService = ({ services, orderData, onComplete, carType }: any) => {
                 key={service.serviceId}
                 className="flex h-[42px] w-[280px] items-center justify-between rounded-lg bg-white"
               >
-                <p className="ms-[40px] text-[15px] font-bold  tracking-[9%] text-dark-blue">
+                <p className="ms-[40px] text-[15px] font-medium  tracking-[9%] text-dark-blue">
                   {service.serviceName}
                 </p>
               </div>

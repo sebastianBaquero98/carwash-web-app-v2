@@ -88,6 +88,7 @@ const OrderCardPaid = ({ info }: props) => {
         info.carMake === "Ferrari" ||
         info.carMake === "Maserati" ||
         info.carMake === "Alfa-Romeo" ||
+        info.carMake === "Lincoln" ||
         info.carMake === "Porsche" ? (
           <Image
             alt="brand-icon"
@@ -99,8 +100,8 @@ const OrderCardPaid = ({ info }: props) => {
           <Image
             alt="brand-icon"
             src={`https://carwash-car-make-images.s3.amazonaws.com/${info.carMake}.png`}
-            width={10}
-            height={30}
+            width={20}
+            height={10}
           />
         ) : (
           <Image
@@ -136,7 +137,7 @@ const OrderCardPaid = ({ info }: props) => {
         )}
 
         <div className="flex  items-center gap-2">
-          <h2 className="text-[17px] font-bold text-dark-blue">{`$${info.price}`}</h2>
+          <h2 className="text-[17px] font-medium text-dark-blue">{`$${info.price}`}</h2>
           {info.paymentType === "credit" && (
             <Image
               src="/icons/credit-card-2.svg"

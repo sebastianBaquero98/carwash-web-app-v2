@@ -65,6 +65,13 @@ const OrderCardUnPaid = ({ info, hasBays }: props) => {
             width={30}
             height={30}
           />
+        ) : info.carMake === "Lincoln" ? (
+          <Image
+            alt="brand-icon"
+            src={`https://carwash-car-make-images.s3.amazonaws.com/${info.carMake}.png`}
+            width={20}
+            height={10}
+          />
         ) : (
           <Image
             alt="brand-icon"
@@ -99,7 +106,7 @@ const OrderCardUnPaid = ({ info, hasBays }: props) => {
           <p className="text-[10px]">Bay 2</p>
         </div> */}
         <div className="flex items-center gap-2">
-          <h2 className="text-[20px] font-bold text-dark-blue">{`$${info.price}`}</h2>
+          <h2 className="text-[15px] font-medium text-dark-blue">{`$${info.price}`}</h2>
           {info.paid && info.paymentType === "credit" && (
             <Image
               src="/icons/credit-card-2.svg"
@@ -167,7 +174,7 @@ const OrderCardUnPaid = ({ info, hasBays }: props) => {
               {info.dateHourFinish}
             </p>
           )}
-          <p className="text-[10px] font-bold text-dark-blue">{`-- ${info.estimatedPickUpTime}`}</p>
+          <p className="text-[10px] font-medium text-dark-blue">{`-- ${info.estimatedPickUpTime}`}</p>
         </div>
       </div>
       <ActionBtns

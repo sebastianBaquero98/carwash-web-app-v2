@@ -34,7 +34,7 @@ interface props {
 
 const LocationMetrics = ({ info, date }: props) => {
   return (
-    <div className=" flex w-full flex-col items-center bg-navy-blue pb-3 pt-6">
+    <div className=" flex w-full flex-col items-center bg-navy-blue py-2">
       <div className="flex w-full justify-center gap-6">
         <div className="flex flex-col items-center">
           <h3 className="text-[35px] font-bold">{`$${info.totalSales.toLocaleString().split(".")[0]}`}</h3>
@@ -47,12 +47,12 @@ const LocationMetrics = ({ info, date }: props) => {
           </p>
         </div>
       </div>
-      <div className="mt-5 flex w-full items-center justify-center gap-5">
+      <div className="mt-3 flex w-full items-center justify-center gap-5">
         <DatePicker pDate={date} />
         <FilterButton />
       </div>
 
-      <div className="mt-4 flex w-[340px] justify-evenly rounded-[10px] bg-white py-3">
+      <div className="mt-3 flex w-[340px] justify-evenly rounded-[10px] bg-white py-1">
         <div className="flex flex-col justify-items-center">
           <div className="flex items-center gap-1">
             <Image

@@ -36,7 +36,7 @@ const NavContent = ({ userRole }: propsContent) => {
                 } flex items-center justify-start gap-4 bg-transparent p-4 `}
               >
                 <p
-                  className={`${isActive ? "text-[18px] font-bold leading-[140%]" : "text-[18px] font-medium leading-[25.2px]"}`}
+                  className={`${isActive ? "text-[18px] font-medium leading-[140%]" : "text-[18px] font-medium leading-[25.2px]"}`}
                 >
                   {link.label}
                 </p>
@@ -62,7 +62,7 @@ const NavBar = ({ locationName, userRole }: props) => {
         <div className="flex items-center">
           <Image src="/icons/app-icon.jpg" width={25} height={25} alt="icon" />
 
-          <p className="primary-text-gradient ms-2 text-sm">
+          <p className="primary-text-gradient ms-2 text-sm ">
             My Wash Solutions
           </p>
         </div>
@@ -79,7 +79,7 @@ const NavBar = ({ locationName, userRole }: props) => {
         </Link>
         {/* <div className="flex items-center"> */}
         <Button onClick={handleToggle}>
-          <p className="primary-text-gradient text-sm">
+          <p className="primary-text-gradient text-sm font-normal">
             {!isClicked ? "My Wash Solutions" : locationName}
           </p>
         </Button>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,8 +15,8 @@ import { Service } from "@/types";
 
 const OrderDetail = () => {
   const { orderData, updateOrderData } = useOrderContext();
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
-
   const [selectedDiscount, setIsSelectedDiscount] = useState("");
   const [isEdit, setIsEdit] = useState(false);
   const [discount, setDiscount] = useState(0);
@@ -71,61 +71,63 @@ const OrderDetail = () => {
   };
 
   const handleConfirm = async () => {
-    const orderDataWithExtras = {
-      ...orderData,
-      extraServicesIds: orderData.extraServices.map(
-        (item: Service) => item.serviceId
-      ),
-    };
-    // console.log(orderDataWithExtras);
-    const formatedTime = convertTo24HourFormat(estimatedPickUptime);
+    startTransition(async () => {
+      const orderDataWithExtras = {
+        ...orderData,
+        extraServicesIds: orderData.extraServices.map(
+          (item: Service) => item.serviceId
+        ),
+      };
+      // console.log(orderDataWithExtras);
+      const formatedTime = convertTo24HourFormat(estimatedPickUptime);
 
-    await createOrder(
-      orderDataWithExtras,
-      comment,
-      formatedTime,
-      selectedDiscount,
-      discount,
-      price
-    );
-    const todayDate = getFormattedDate();
+      await createOrder(
+        orderDataWithExtras,
+        comment,
+        formatedTime,
+        selectedDiscount,
+        discount,
+        price
+      );
+      const todayDate = getFormattedDate();
 
-    await updateLocationMetricsCreate(
-      orderData.accessToken,
-      orderData.locationId,
-      todayDate,
-      price,
-      orderData.clientId
-    );
+      await updateLocationMetricsCreate(
+        orderData.accessToken,
+        orderData.locationId,
+        todayDate,
+        price,
+        orderData.clientId
+      );
 
-    // Clear the order data
-    updateOrderData({
-      accessToken: "",
-      clientLastServed: "",
-      clientId: "",
-      locationId: "",
-      comment: "",
-      garageId: "",
-      carId: "",
-      discount: 0,
-      discountType: "",
-      orderState: "",
-      extraServices: [],
-      estimatedPickUpTime: "",
-      tz: "",
-      clientName: "",
-      clientEmail: "",
-      carTypeId: "",
-      clientPhoneNumber: "",
-      carTypeName: "",
-      service: {
-        serviceName: "",
-        serviceId: "",
-        price: "0",
-        serviceGroupId: "",
-      },
+      // Clear the order data
+      updateOrderData({
+        accessToken: "",
+        clientLastServed: "",
+        clientId: "",
+        locationId: "",
+        comment: "",
+        garageId: "",
+        carId: "",
+        discount: 0,
+        discountType: "",
+        orderState: "",
+        extraServices: [],
+        estimatedPickUpTime: "",
+        tz: "",
+        clientName: "",
+        clientEmail: "",
+        carTypeId: "",
+        clientPhoneNumber: "",
+        carTypeName: "",
+        service: {
+          serviceName: "",
+          serviceId: "",
+          price: "0",
+          serviceGroupId: "",
+        },
+      });
+      router.push(`/orders`);
     });
-    router.push(`/orders`);
   };
 
   return (
@@ -221,21 +223,22 @@ const OrderDetail = () => {
               type="number"
               onChange={(e) => setDiscount(parseFloat(e.target.value))}
               placeholder="amount"
-              className="h-[28px] w-[78px] border-dark-blue bg-[#DEE2E9] text-center align-middle text-dark-blue placeholder:text-[10px] placeholder:text-dark-blue focus:outline-none  focus:ring-2 focus:ring-blue-300"
+              className="h-[28px] w-[78px] border-dark-blue bg-[#DEE2E9] text-center align-middle text-[16px] text-dark-blue placeholder:text-[10px] placeholder:text-dark-blue focus:outline-none  focus:ring-2 focus:ring-blue-300"
             />
           </div>
           <Textarea
             onChange={(e) => setComment(e.target.value)}
-            className="mt-3 h-[59px] w-[255px] rounded-[10px] border-dark-blue bg-[#DEE2E9] text-[12px] text-dark-blue placeholder:text-[10px] placeholder:text-dark-blue"
+            className="mt-3 h-[59px] w-[255px] rounded-[10px] border-dark-blue bg-[#DEE2E9] text-[16px] text-dark-blue placeholder:text-[10px] placeholder:text-dark-blue"
             placeholder="Add Comment"
           />
         </div>
       </div>
       <Button
+        disabled={estimatedPickUptime === "" || isPending}
         onClick={handleConfirm}
         className="mt-5 w-4/5 rounded-lg border-8 border-rolex-green tracking-[9%]"
       >
-        Confirm
+        {isPending ? "Submiting..." : "Confirm"}
       </Button>
     </div>
   );
